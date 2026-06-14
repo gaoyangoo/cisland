@@ -3,7 +3,7 @@ import Foundation
 
 // MARK: - Size Constants
 
-enum IslandSize {
+struct WindowSizeConstants {
     static let defaultWidth: CGFloat = 600
     static let defaultHeight: CGFloat = 400
     static let collapsedHeight: CGFloat = 60
@@ -12,6 +12,7 @@ enum IslandSize {
     static let animationDuration: TimeInterval = 0.3
     static let shadowRadius: CGFloat = 10
     static let cornerRadius: CGFloat = 8
+    static let WindowUtils.defaultDuration: TimeInterval = 0.3
 }
 
 // MARK: - Window Configuration
@@ -27,8 +28,8 @@ struct WindowConfiguration {
     let backgroundColor: NSColor
 
     static let `default` = WindowConfiguration(
-        size: CGSize(width: IslandSize.defaultWidth, height: IslandSize.defaultHeight),
-        position: CGPoint(x: IslandSize.standardMargin, y: IslandSize.standardMargin),
+        size: CGSize(width: WindowSizeConstants.defaultWidth, height: WindowSizeConstants.defaultHeight),
+        position: CGPoint(x: WindowSizeConstants.standardMargin, y: WindowSizeConstants.standardMargin),
         level: .floating,
         title: "Island",
         isMovable: true,
@@ -43,8 +44,8 @@ struct WindowConfiguration {
 struct WindowPosition {
     static func belowMenuBar(on screen: NSScreen = NSScreen.main ?? NSScreen()) -> CGPoint {
         let menuBarHeight: CGFloat = 24
-        let yPosition = screen.visibleFrame.maxY - menuBarHeight - IslandSize.defaultHeight
-        return CGPoint(x: screen.visibleFrame.minX + IslandSize.standardMargin, y: yPosition)
+        let yPosition = screen.visibleFrame.maxY - menuBarHeight - WindowSizeConstants.defaultHeight
+        return CGPoint(x: screen.visibleFrame.minX + WindowSizeConstants.standardMargin, y: yPosition)
     }
 
     static func centerOnScreen(size: CGSize, on screen: NSScreen = NSScreen.main ?? NSScreen()) -> CGPoint {
@@ -54,7 +55,7 @@ struct WindowPosition {
     }
 
     static func defaultPosition(size: CGSize) -> CGPoint {
-        return CGPoint(x: IslandSize.standardMargin, y: IslandSize.standardMargin)
+        return CGPoint(x: WindowSizeConstants.standardMargin, y: WindowSizeConstants.standardMargin)
     }
 }
 
@@ -62,12 +63,12 @@ struct WindowPosition {
 
 class WindowAnimator {
     private let timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-    private let defaultDuration = IslandSize.animationDuration
+    private static let WindowUtils.defaultDuration = WindowSizeConstants.animationDuration
 
     func animateResize(
         window: NSWindow,
         to newSize: CGSize,
-        duration: TimeInterval = defaultDuration,
+        duration: TimeInterval = WindowUtils.defaultDuration,
         completion: (() -> Void)? = nil
     ) {
         guard let currentWindow = window else { return }
@@ -98,7 +99,7 @@ class WindowAnimator {
     func animatePosition(
         window: NSWindow,
         to newPosition: CGPoint,
-        duration: TimeInterval = defaultDuration
+        duration: TimeInterval = WindowUtils.defaultDuration
     ) {
         guard let currentWindow = window else { return }
 
@@ -120,7 +121,7 @@ class WindowAnimator {
         NSAnimationContext.endGrouping()
     }
 
-    func fadeIn(window: NSWindow, duration: TimeInterval = defaultDuration) {
+    func fadeIn(window: NSWindow, duration: TimeInterval = WindowUtils.defaultDuration) {
         window.alphaValue = 0.0
 
         NSAnimationContext.beginGrouping()
@@ -131,7 +132,7 @@ class WindowAnimator {
         NSAnimationContext.endGrouping()
     }
 
-    func fadeOut(window: NSWindow, duration: TimeInterval = defaultDuration, completion: (() -> Void)? = nil) {
+    func fadeOut(window: NSWindow, duration: TimeInterval = WindowUtils.defaultDuration, completion: (() -> Void)? = nil) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current.duration = duration
         NSAnimationContext.current.timingFunction = timingFunction
