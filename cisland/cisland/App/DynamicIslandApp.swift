@@ -1,20 +1,10 @@
-//
-//  cislandApp.swift
-//  cisland
-//
-//  Created by claus on 2026/6/14.
-//
-
 import SwiftUI
 
 @main
-struct cislandApp: App {
+struct DynamicIslandApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
         Settings {
             EmptyView()
         }
