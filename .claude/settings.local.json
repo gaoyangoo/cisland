@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(pip3 install *)",
+      "Bash(brew install *)",
+      "WebSearch",
+      "Bash(tesseract --version)",
+      "Bash(pkill -f \"brew install\")",
+      "Bash(pkill -f \"Homebrew/brew\")",
+      "Bash(brew remove *)",
+      "Bash(rm -f /Users/claus/.claude/image-cache/89cc9ed6-6ab8-4587-b242-d8e0361c6619/tasks/btmxj1f20.output)",
+      "Bash(rm -f /private/tmp/claude-501/-Users-claus-code-claude-code-island/89cc9ed6-6ab8-4587-b242-d8e0361c6619/tasks/btmxj1f20.output)",
+      "Bash(npm search *)",
+      "Bash(npm view *)",
+      "Bash(pip3 uninstall *)",
+      "Bash(npm install *)",
+      "Bash(claude-hud --help)",
+      "Bash(npx claude-hud *)",
+      "Bash(pip3 list *)",
+      "Bash(fc-list)",
+      "Skill(update-config)"
+    ]
+  },
+  "spinnerTipsEnabled": false
+}
