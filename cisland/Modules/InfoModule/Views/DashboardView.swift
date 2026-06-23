@@ -166,8 +166,6 @@ struct DashboardView: View {
 
         // Simulate loading state
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            guard let self = self else { return }
-
             // Check if weather service has data
             if weatherService.currentWeather != nil {
                 self.isLoading = false

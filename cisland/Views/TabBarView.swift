@@ -5,10 +5,11 @@ struct TabBarView: View {
 
     var body: some View {
         HStack(spacing: 24) {
-            ForEach(Array(moduleRegistry.modules.enumerated()), id: \.element.id) { index, module in
-                ModuleIcon(module: module, isActive: index == moduleRegistry.activeModuleIndex)
+            ForEach(0..<moduleRegistry.modules.count, id: \.self) { index in
+                let isActive = index == moduleRegistry.activeModuleIndex
+                ModuleIcon(module: moduleRegistry.modules[index], isActive: isActive)
                     .onTapGesture {
-                        moduleRegistry.switchToModule(at: index)
+                        moduleRegistry.setActiveModule(at: index)
                     }
             }
 

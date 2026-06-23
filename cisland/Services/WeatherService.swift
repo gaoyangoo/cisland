@@ -28,10 +28,10 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     private let locationManager = CLLocationManager()
     private let weatherTimer = Timer()
 
-    weak var delegate: WeatherServiceDelegate?
+    var delegate: (any WeatherServiceDelegateProtocol)?
 
     var currentWeather: WeatherModel?
-    private var lastUpdated: Date?
+    var lastUpdated: Date?
     private var isUpdating = false
 
     // Default coordinates (backup when location access is denied)
@@ -72,14 +72,14 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
         locationManager.requestWhenInUseAuthorization()
     }
 
-    // MARK: - Private Methods
+    // MARK: - Public Methods
 
-    private func updateWeather() {
+    public func updateWeather() {
         guard !isUpdating else { return }
 
         isUpdating = true
 
-        if locationManager.authorizationStatus == .authorizedWhenInUse ||
+        if locationManager.authorizationStatus == .authorized ||
            locationManager.authorizationStatus == .authorizedAlways {
             locationManager.startUpdatingLocation()
         } else {
@@ -178,7 +178,7 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
+        if status == .authorized || status == .authorizedAlways {
             updateWeather()
         } else {
             // Use default coordinates if permission is denied

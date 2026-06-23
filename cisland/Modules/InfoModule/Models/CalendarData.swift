@@ -16,18 +16,19 @@ struct CalendarData {
         let startDate: Date
         let endDate: Date
         let isAllDay: Bool
+        let location: String?
         let color: String?
 
-        init(id: UUID = UUID(), title: String, startDate: Date, endDate: Date, isAllDay: Bool = false, color: String? = nil) {
+        init(id: UUID = UUID(), title: String, startDate: Date, endDate: Date, isAllDay: Bool = false, location: String? = nil, color: String? = nil) {
             self.id = id
             self.title = title
             self.startDate = startDate
             self.endDate = endDate
             self.isAllDay = isAllDay
+            self.location = location
             self.color = color
         }
-
-            }
+    }
 
     let currentDate: Date
     let weekDates: [Date]
@@ -36,12 +37,12 @@ struct CalendarData {
 
     init(currentDate: Date = Date(), weekDates: [Date]? = nil, selectedDate: Date? = nil, events: [Event] = []) {
         self.currentDate = currentDate
-        self.weekDates = weekDates ?? generateWeekDates(for: currentDate)
         self.selectedDate = selectedDate
         self.events = events
+        self.weekDates = weekDates ?? Self.generateWeekDates(for: currentDate)
     }
 
-    private func generateWeekDates(for date: Date) -> [Date] {
+    private static func generateWeekDates(for date: Date) -> [Date] {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
         let startOfWeek = calendar.date(from: components)!

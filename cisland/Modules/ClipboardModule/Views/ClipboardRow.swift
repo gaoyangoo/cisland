@@ -11,7 +11,7 @@ struct ClipboardRow: View {
                 .frame(width: 40, height: 40)
                 .background(
                     Circle()
-                        .fill(item.type == .text ? Color.blue.opacity(0.2) : Color.green.opacity(0.2))
+                        .fill(item.isText ? Color.blue.opacity(0.2) : Color.green.opacity(0.2))
                 )
 
             contentView
@@ -25,21 +25,18 @@ struct ClipboardRow: View {
         .onTapGesture {
             onTap()
         }
-        .onLongPressGesture {
-            // Could show context menu here
-        }
     }
 
     private var iconView: some View {
-        Image(systemName: item.type == .text ? "doc.text.fill" : "photo.fill")
+        Image(systemName: item.isText ? "doc.text.fill" : "photo.fill")
             .font(.system(size: 24, weight: .medium))
-            .foregroundColor(item.type == .text ? .blue : .green)
+            .foregroundColor(item.isText ? .blue : .green)
     }
 
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(item.preview)
+                Text(item.isText ? "Text" : "Image")
                     .font(.body)
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
@@ -52,8 +49,8 @@ struct ClipboardRow: View {
                     .foregroundColor(.secondary)
             }
 
-            if item.type == .text {
-                Text(item.content)
+            if case .text(let text) = item.content {
+                Text(text)
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(2)
@@ -78,11 +75,7 @@ struct ClipboardRow_Previews: PreviewProvider {
         VStack(spacing: 16) {
             ClipboardRow(
                 item: ClipboardItem(
-                    id: UUID(),
-                    type: .text,
-                    content: "This is a sample clipboard item text that demonstrates how the row looks with longer content.",
-                    timestamp: Date().addingTimeInterval(-3600),
-                    preview: "This is a sample clipboard item..."
+                    content: .text("This is a sample clipboard item text that demonstrates how the row looks with longer content.")
                 ),
                 isSelected: false,
                 onTap: {}
@@ -90,12 +83,7 @@ struct ClipboardRow_Previews: PreviewProvider {
 
             ClipboardRow(
                 item: ClipboardItem(
-                    id: UUID(),
-                    type: .image,
-                    content: "Image",
-                    timestamp: Date(),
-                    preview: "Image preview",
-                    imageData: Data()
+                    content: .image(Data())
                 ),
                 isSelected: true,
                 onTap: {}
@@ -103,6 +91,6 @@ struct ClipboardRow_Previews: PreviewProvider {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.controlBackgroundColor))
+        .background(Color(nsColor: .controlBackgroundColor))
     }
 }

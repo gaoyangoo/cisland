@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04ABF903BD6357C113A95A5F /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33B5BD8B27508A92C5CFF3F /* ClipboardService.swift */; };
 		0620106759C180AB53224E13 /* WindowModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4B4F34AEA5548E9A837B04 /* WindowModule.swift */; };
-		0E314834F5D4CE0933F310E1 /* WindowUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182A06F5A8EBB915A90D5447 /* WindowUtils.swift */; };
 		11F2E46A65D9BF27FB475AA7 /* ClipboardSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9C6F2C52E4A3208DF8F2E0 /* ClipboardSearchField.swift */; };
 		155E3D8934863BF8B7825AED /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782505E42AA5D6AA6A77EF5D /* WeatherService.swift */; };
 		1B884C40C9D7E2C66053345E /* MusicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B903E9121EE398444C5E3ABB /* MusicCard.swift */; };
@@ -30,17 +29,16 @@
 		9266CD37F5E5F52F973CE771 /* cislandApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14ECFE6097B345940007DD /* cislandApp.swift */; };
 		9616FB81D1973C25AE100F69 /* ModuleRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B1605EE1EFD9F8F192F8C5 /* ModuleRegistry.swift */; };
 		97764308DAEBD59CE1D5B91A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610B3466E5384BA107C84A09 /* AppDelegate.swift */; };
-		9F9EA446C8E93D096AF711E0 /* IslandWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691798F99EA8C2DDCE98C2E /* IslandWindowController.swift */; };
 		A247FD9D7A7230849613043A /* Hotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C285471F73306A6A0364F596 /* Hotkey.swift */; };
 		A2C94642AC3560EB05470DD4 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9F4C1578475699B5AA16FA /* TabBarView.swift */; };
 		A89388560E5C1832B5373243 /* ClipboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9274A8D1B2E7074C0F80E /* ClipboardRow.swift */; };
 		ABAB148527C66C9CDCC339BC /* CalendarData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EED27C71EE03A35F6F569A9 /* CalendarData.swift */; };
 		BB71DD4BE3220FEF6785126C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C5A65D1522BE17EB81D384E /* Assets.xcassets */; };
+		CC1122334A5B6C7D8E9F0011 /* KeyValueModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2233445B6C7D8E9F001122 /* KeyValueModule.swift */; };
 		D9B3344FA2305F988ECB660F /* HotkeyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A99EB4C789B5C4FE3A35BA /* HotkeyModule.swift */; };
 		DBB9EEEB153D14363BBBA9CA /* MusicService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170E22AC12A16C336D7B858B /* MusicService.swift */; };
 		DE19F12EDA043095EDEE2BA9 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56AE8051ADAD69947BFD2A9E /* Notifications.swift */; };
 		E4FEBAD6A3F89505C8E8C744 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E215D65E88DF7A2BE8AD5E0 /* DashboardView.swift */; };
-		E9DA96059D88389C0624B7F9 /* IslandPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D048A0A2351E725F74E6FA4 /* IslandPanel.swift */; };
 		ED8C83ECA9D61423F1314B0B /* ClipboardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346BA0D164352D4C5FD7D11C /* ClipboardModule.swift */; };
 		EFFC291DCC02FC4A6C6AB73D /* IslandContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022C74950AF6B8530DD6A5FF /* IslandContainerView.swift */; };
 		F01C2869260A176E540A7738 /* ModuleIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBBA0E2339BD033A44A1FAE /* ModuleIcon.swift */; };
@@ -53,7 +51,6 @@
 		0B95BAEE5C8EF9713089113C /* IslandShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandShape.swift; sourceTree = "<group>"; };
 		0E215D65E88DF7A2BE8AD5E0 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		170E22AC12A16C336D7B858B /* MusicService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicService.swift; sourceTree = "<group>"; };
-		182A06F5A8EBB915A90D5447 /* WindowUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowUtils.swift; sourceTree = "<group>"; };
 		1CD6D04648ECD8E50E02E8B3 /* WeatherCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCard.swift; sourceTree = "<group>"; };
 		2F0E88396121C101FAE84BF8 /* IslandModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandModule.swift; sourceTree = "<group>"; };
 		346BA0D164352D4C5FD7D11C /* ClipboardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardModule.swift; sourceTree = "<group>"; };
@@ -68,7 +65,6 @@
 		92CDE424B7323217223A9A6B /* StatusBarModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarModule.swift; sourceTree = "<group>"; };
 		943EE53286287814ADCC9D9E /* ExpandedIslandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedIslandView.swift; sourceTree = "<group>"; };
 		975423F814C23B9601EEBBAC /* ClipboardItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardItem.swift; sourceTree = "<group>"; };
-		9D048A0A2351E725F74E6FA4 /* IslandPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandPanel.swift; sourceTree = "<group>"; };
 		9E9C6F2C52E4A3208DF8F2E0 /* ClipboardSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardSearchField.swift; sourceTree = "<group>"; };
 		9F7D18ED5F8D3B88DDEA86E4 /* IslandBackgroundStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandBackgroundStyle.swift; sourceTree = "<group>"; };
 		A094C2061D68AC220E8587A6 /* CalendarCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCard.swift; sourceTree = "<group>"; };
@@ -76,7 +72,6 @@
 		A242B24BFD89E74C4454ED7F /* CompactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactView.swift; sourceTree = "<group>"; };
 		A9B1605EE1EFD9F8F192F8C5 /* ModuleRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleRegistry.swift; sourceTree = "<group>"; };
 		AAB2978B7D5AA11459DD5D52 /* DynamicIslandApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandApp.swift; sourceTree = "<group>"; };
-		B691798F99EA8C2DDCE98C2E /* IslandWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandWindowController.swift; sourceTree = "<group>"; };
 		B903E9121EE398444C5E3ABB /* MusicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCard.swift; sourceTree = "<group>"; };
 		BD9F4C1578475699B5AA16FA /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		BEBBA0E2339BD033A44A1FAE /* ModuleIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleIcon.swift; sourceTree = "<group>"; };
@@ -88,6 +83,7 @@
 		E8D3129B3C159BA1E27A30FB /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		EC4B4F34AEA5548E9A837B04 /* WindowModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowModule.swift; sourceTree = "<group>"; };
 		F33B5BD8B27508A92C5CFF3F /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
+		DD2233445B6C7D8E9F001122 /* KeyValueModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -98,6 +94,14 @@
 				31C85E6CA944A296AF7F3384 /* Views */,
 			);
 			path = ClipboardModule;
+			sourceTree = "<group>";
+		};
+		EE3344556C7D8E9F00112233 /* KeyValueModule */ = {
+			isa = PBXGroup;
+			children = (
+				DD2233445B6C7D8E9F001122 /* KeyValueModule.swift */,
+			);
+			path = KeyValueModule;
 			sourceTree = "<group>";
 		};
 		2EC53641A2B755A680130B21 /* Views */ = {
@@ -164,9 +168,6 @@
 		ABFAA5789F76D5EDAB1FDFA1 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
-				9D048A0A2351E725F74E6FA4 /* IslandPanel.swift */,
-				B691798F99EA8C2DDCE98C2E /* IslandWindowController.swift */,
-				182A06F5A8EBB915A90D5447 /* WindowUtils.swift */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -245,6 +246,7 @@
 				EC4B4F34AEA5548E9A837B04 /* WindowModule.swift */,
 				15AC4B87E3E04B37699A9A83 /* ClipboardModule */,
 				CF8A342C01533C615EB1ED62 /* InfoModule */,
+				EE3344556C7D8E9F00112233 /* KeyValueModule */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -337,10 +339,8 @@
 				50E140DF16F6159A7C70C672 /* IslandBackgroundStyle.swift in Sources */,
 				EFFC291DCC02FC4A6C6AB73D /* IslandContainerView.swift in Sources */,
 				1D86E6D277262D8AF032B419 /* IslandModule.swift in Sources */,
-				E9DA96059D88389C0624B7F9 /* IslandPanel.swift in Sources */,
 				83E4FD20B7D55C12D62B74A7 /* IslandShape.swift in Sources */,
 				4F9C5E5CFB589D6875C56BBA /* IslandSize.swift in Sources */,
-				9F9EA446C8E93D096AF711E0 /* IslandWindowController.swift in Sources */,
 				F01C2869260A176E540A7738 /* ModuleIcon.swift in Sources */,
 				9616FB81D1973C25AE100F69 /* ModuleRegistry.swift in Sources */,
 				1B884C40C9D7E2C66053345E /* MusicCard.swift in Sources */,
@@ -351,8 +351,8 @@
 				7EA48826B563AC9865C33EB3 /* WeatherCard.swift in Sources */,
 				155E3D8934863BF8B7825AED /* WeatherService.swift in Sources */,
 				0620106759C180AB53224E13 /* WindowModule.swift in Sources */,
-				0E314834F5D4CE0933F310E1 /* WindowUtils.swift in Sources */,
 				9266CD37F5E5F52F973CE771 /* cislandApp.swift in Sources */,
+				CC1122334A5B6C7D8E9F0011 /* KeyValueModule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +413,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -500,6 +501,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;

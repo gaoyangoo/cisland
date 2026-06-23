@@ -26,6 +26,7 @@ public class StatusBarModule: IslandModule {
     }
 }
 
+
 // Simple placeholder view for status bar module
 private struct StatusBarContentView: View {
     var body: some View {

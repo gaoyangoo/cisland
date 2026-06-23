@@ -3,63 +3,81 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var windowController: NSWindowController?
-    var statusBarItem: NSStatusItem?
+    var panel: NSPanel?
+    var statusItem: NSStatusItem?
     var hotkey: Hotkey?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        setupModuleRegistry()
-        setupWindow()
-        setupStatusBar()
+        NSApp.setActivationPolicy(.accessory)
+
+        ModuleRegistry.shared.addModule(InfoModule())
+        ModuleRegistry.shared.addModule(ClipboardModule())
+        ModuleRegistry.shared.addModule(KeyValueModule())
+
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        self.statusItem = item
+        if let button = item.button {
+            button.title = "⚡"
+            button.target = self
+            button.action = #selector(togglePanel)
+            button.sendAction(on: [.leftMouseDown])
+        }
+
         setupGlobalHotkey()
     }
 
-    private func setupModuleRegistry() {
-        // Initialize module registry
-        ModuleRegistry.shared.addModule(StatusBarModule())
-        ModuleRegistry.shared.addModule(HotkeyModule())
-        ModuleRegistry.shared.addModule(WindowModule())
-    }
-
-    private func setupWindow() {
-        // Find existing window controller from the project
-        // In a real implementation, this would be injected or found through the responder chain
-        if let window = NSApplication.shared.windows.first {
-            window.title = "Claus Island"
-            window.center()
-
-            windowController = NSWindowController(window: window)
-            windowController?.showWindow(nil)
+    @objc func togglePanel() {
+        if let p = panel, p.isVisible {
+            p.orderOut(nil)
+            return
         }
+        showPanel()
     }
 
-    private func setupStatusBar() {
-        statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    private func showPanel() {
+        let width: CGFloat = 480
 
-        guard let statusBarItem = statusBarItem else { return }
+        if panel == nil {
+            let p = NSPanel(
+                contentRect: NSRect(x: 0, y: 0, width: width, height: 240),
+                styleMask: [.borderless, .fullSizeContentView, .nonactivatingPanel],
+                backing: .buffered,
+                defer: false
+            )
+            p.level = .floating
+            p.isMovable = false
+            p.hidesOnDeactivate = false
+            p.hasShadow = false
+            p.backgroundColor = .clear
+            p.isOpaque = false
+            p.titlebarAppearsTransparent = true
+            p.titleVisibility = .hidden
+            p.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
-        statusBarItem.button?.title = "🎄"
-        statusBarItem.button?.toolTip = "Claus Island"
+            let rootView = IslandContainerView()
+            let hosting = NSHostingView(rootView: rootView)
+            hosting.autoresizingMask = [.width, .height]
+            p.contentView = hosting
+            panel = p
+        }
 
-        statusBarItem.button?.action = #selector(statusBarButtonClicked)
-        statusBarItem.button?.target = self
-    }
+        guard let p = panel, let screen = NSScreen.main ?? NSScreen.screens.first else { return }
 
-    @objc private func statusBarButtonClicked() {
-        windowController?.showWindow(nil)
-        windowController?.window?.makeKeyAndOrderFront(nil)
+        let x = screen.visibleFrame.midX - width / 2
+        let y = screen.visibleFrame.maxY - 240
+        p.setFrame(NSRect(x: x, y: y, width: width, height: 240), display: true)
+        p.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     private func setupGlobalHotkey() {
-        hotkey = Hotkey(key: .o, modifiers: [.command, .shift]) {
-            self.windowController?.showWindow(nil)
-            self.windowController?.window?.makeKeyAndOrderFront(nil)
+        hotkey = Hotkey(key: .o, modifiers: [.command, .shift]) { [weak self] in
+            DispatchQueue.main.async { self?.togglePanel() }
         }
         hotkey?.register()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Clean up
         hotkey?.unregister()
     }
 }

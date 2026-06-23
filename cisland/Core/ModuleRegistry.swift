@@ -26,6 +26,9 @@ public final class ModuleRegistry: ObservableObject {
         // Will be populated by individual modules conforming to IslandModule
     }
 
+    /// Shared instance
+    public static let shared = ModuleRegistry()
+
     /// Add a module to the registry
     /// - Parameter module: The module to add
     public func addModule(_ module: any IslandModule) {

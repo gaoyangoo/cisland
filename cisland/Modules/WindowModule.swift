@@ -26,6 +26,7 @@ public class WindowModule: IslandModule {
     }
 }
 
+
 // Simple placeholder view for window module
 private struct WindowContentView: View {
     var body: some View {

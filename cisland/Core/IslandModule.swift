@@ -8,7 +8,6 @@
 import SwiftUI
 
 /// Protocol defining the contract for all island modules
-@MainActor
 public protocol IslandModule: Identifiable, ObservableObject, Hashable {
     /// Unique identifier for the module
     var id: String { get }
@@ -30,14 +29,15 @@ public protocol IslandModule: Identifiable, ObservableObject, Hashable {
 
     /// Initialize the module (called when becoming active)
     func initialize()
+}
 
-    // MARK: - Hashable Conformance
-
-    func hash(into hasher: inout Hasher) {
+// MARK: - Hashable Conformance
+extension IslandModule {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 
-    static func == (lhs: IslandModule, rhs: IslandModule) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.id == rhs.id
     }
 }

@@ -34,7 +34,7 @@ struct ClipboardView: View {
                 }
                 .padding(.horizontal)
             }
-            .background(Color(.controlBackgroundColor))
+            .background(Color(nsColor: .controlBackgroundColor))
 
             footerView
                 .padding(.horizontal)

@@ -119,7 +119,7 @@ struct WeatherCard: View {
             if let lastUpdated = weatherService.lastUpdated {
                 Text("Updated \(lastUpdated.timeAgo())")
                     .font(.caption2)
-                    .foregroundColor(.tertiary)
+                    .foregroundColor(Color.secondary)
             }
         }
         .frame(maxWidth: .infinity)
@@ -194,7 +194,7 @@ struct WeatherCard: View {
             iconColor = .gray
         }
 
-        Image(systemName: iconName)
+        return Image(systemName: iconName)
             .foregroundColor(iconColor)
     }
 
@@ -219,7 +219,7 @@ struct WeatherCard: View {
 
     // MARK: - Helper Extensions
 
-    private struct DateAgoFormatter {
+    struct DateAgoFormatter {
         static let formatter: RelativeDateTimeFormatter = {
             let formatter = RelativeDateTimeFormatter()
             formatter.unitsStyle = .short

@@ -26,6 +26,7 @@ public class HotkeyModule: IslandModule {
     }
 }
 
+
 // Simple placeholder view for hotkey module
 private struct HotkeyContentView: View {
     var body: some View {

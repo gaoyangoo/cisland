@@ -11,62 +11,60 @@ class MusicService: ObservableObject {
     init(scriptPath: String = "/Users/claus/code/claude_code/island/cisland/cisland/hooks/nowplaying.swift") {
         self.scriptPath = scriptPath
         self.musicInfo = MusicInfo(artist: "Unknown", album: "Unknown", title: "No track playing", duration: 0, position: 0, state: "stopped")
-        self.startPeriodicRefresh()
     }
 
-    deinit {
-        stopPeriodicRefresh()
-    }
-
-    private func startPeriodicRefresh() {
-        // Initial fetch
+    func start() {
         fetchMusicInfo()
-
-        // Set up timer to refresh every 10 seconds
         timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
             self?.fetchMusicInfo()
         }
     }
 
-    private func stopPeriodicRefresh() {
+    func stop() {
         timer?.invalidate()
         timer = nil
+    }
+
+    deinit {
+        stop()
     }
 
     private func fetchMusicInfo() {
         isLoading = true
 
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
 
-        // Prepare arguments to run our Swift script
-        let scriptCommand = """
-        do shell script "\(scriptPath)"
-        """
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
 
-        process.arguments = ["-e", scriptCommand]
+            let scriptCommand = """
+            do shell script "\(self.scriptPath)"
+            """
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
+            process.arguments = ["-e", scriptCommand]
 
-        do {
-            try process.run()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            if let output = String(data: data, encoding: .utf8) {
+            let pipe = Pipe()
+            process.standardOutput = pipe
+            process.standardError = pipe
+
+            do {
+                try process.run()
+                process.waitUntilExit()
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                if let output = String(data: data, encoding: .utf8) {
+                    DispatchQueue.main.async {
+                        self.parseMusicInfo(output)
+                        self.isLoading = false
+                    }
+                }
+            } catch {
                 DispatchQueue.main.async {
-                    self.parseMusicInfo(output)
+                    self.musicInfo = MusicInfo(artist: "Unknown", album: "Unknown", title: "Error fetching music info", duration: 0, position: 0, state: "stopped")
                     self.isLoading = false
                 }
             }
-        } catch {
-            DispatchQueue.main.async {
-                self.musicInfo = MusicInfo(artist: "Unknown", album: "Unknown", title: "Error fetching music info", duration: 0, position: 0, state: "stopped")
-                self.isLoading = false
-            }
         }
-
-        process.waitUntilExit()
     }
 
     private func parseMusicInfo(_ jsonString: String) {

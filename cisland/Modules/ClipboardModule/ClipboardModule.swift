@@ -29,7 +29,7 @@ public class ClipboardModule: ObservableObject, IslandModule {
     }
 
     public var expandedView: AnyView {
-        AnyView(ClipboardContentView())
+        AnyView(body)
     }
 
     // MARK: - Clipboard Properties
@@ -74,7 +74,7 @@ public class ClipboardModule: ObservableObject, IslandModule {
     private func moduleHeader() -> some View {
         ModuleHeaderView(
             title: "Clipboard",
-            icon: tabIcon,
+            icon: Image(systemName: tabIcon),
             accentColor: accentColor
         )
     }
@@ -109,7 +109,7 @@ public class ClipboardModule: ObservableObject, IslandModule {
                         .cornerRadius(12)
                     } else {
                         ForEach(getClipboardItems(), id: \.id) { item in
-                            ClipboardItemView(item: item, onDelete: { deleteItem(item) })
+                            ClipboardItemView(item: item, onDelete: { self.deleteItem($0) })
                         }
                     }
                 }
@@ -125,8 +125,8 @@ public class ClipboardModule: ObservableObject, IslandModule {
         clipboardMonitor = Timer.scheduledTimer(
             withTimeInterval: 0.5, // Check every 0.5 seconds
             repeats: true
-        ) { _ in
-            checkClipboardContents()
+        ) { [weak self] _ in
+            self?.checkClipboardContents()
         }
     }
 
@@ -136,7 +136,7 @@ public class ClipboardModule: ObservableObject, IslandModule {
     }
 
     private func checkClipboardContents() {
-        guard let pasteboard = NSPasteboard.general else { return }
+        let pasteboard = NSPasteboard.general
 
         // Check for text content
         if let text = pasteboard.string(forType: .string), !text.isEmpty {
@@ -241,9 +241,9 @@ private struct ClipboardItemView: View {
         .padding(12)
         .background(Color.gray.opacity(0.05))
         .cornerRadius(12)
-        .hoverEffect(.highlight)
     }
 }
+
 
 // MARK: - Module Header View
 private struct ModuleHeaderView: View {

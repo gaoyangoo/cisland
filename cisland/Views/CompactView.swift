@@ -47,7 +47,7 @@ public struct CompactView: View {
 
             // Module label (if space allows)
             if isActive {
-                Text(module.title)
+                Text(module.displayName)
                     .font(.caption2)
                     .foregroundColor(.white.opacity(0.9))
                     .lineLimit(1)

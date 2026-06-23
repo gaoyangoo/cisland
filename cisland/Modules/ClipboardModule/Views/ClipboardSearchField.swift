@@ -32,10 +32,3 @@ struct ClipboardSearchField: NSViewRepresentable {
         }
     }
 }
-
-extension ClipboardSearchField {
-    func frame(width: CGFloat) -> some View {
-        self
-            .frame(width: width)
-    }
-}

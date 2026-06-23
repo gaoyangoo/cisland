@@ -40,36 +40,37 @@ class ClipboardService: ObservableObject {
     }
 
     private func startMonitoring() {
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.checkClipboard()
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.checkClipboard()
         }
     }
 
     private func checkClipboard() {
-        guard let newText = pasteboard.string(forType: .string),
-              !newText.isEmpty,
-              !items.contains(where: { $0.type == .text && $0.content == newText }) else {
-            return
+        // Check for text content
+        if let newText = pasteboard.string(forType: .string),
+           !newText.isEmpty,
+           !items.contains(where: { item in
+               if case .text(let existingText) = item.content {
+                   return existingText == newText
+               }
+               return false
+           }) {
+            let newItem = ClipboardItem(
+                content: .text(newText)
+            )
+            addItem(newItem)
         }
 
-        let newItem = ClipboardItem(
-            id: UUID(),
-            type: .text,
-            content: newText,
-            timestamp: Date(),
-            preview: String(newText.prefix(50)) + (newText.count > 50 ? "..." : "")
-        )
-
-        addItem(newItem)
-
-        if let newImage = pasteboard.data(forType: .tiff) {
+        // Check for image content
+        if let newImage = pasteboard.data(forType: .tiff),
+           !items.contains(where: { item in
+               if case .image(let existingData) = item.content {
+                   return existingData == newImage
+               }
+               return false
+           }) {
             let imageItem = ClipboardItem(
-                id: UUID(),
-                type: .image,
-                content: "Image",
-                timestamp: Date(),
-                preview: "Image",
-                imageData: newImage
+                content: .image(newImage)
             )
             addItem(imageItem)
         }
@@ -88,22 +89,22 @@ class ClipboardService: ObservableObject {
             return items
         }
         return items.filter { item in
-            if item.type == .text {
-                return item.content.lowercased().contains(searchTerm.lowercased())
-            } else {
-                return item.preview.lowercased().contains(searchTerm.lowercased())
+            switch item.content {
+            case .text(let text):
+                return text.lowercased().contains(searchTerm.lowercased())
+            case .image:
+                return false
             }
         }
     }
 
     func copyToClipboard(_ item: ClipboardItem) {
-        if item.type == .text {
-            pasteboard.clearContents()
-            pasteboard.setString(item.content, forType: .string)
-        } else if item.type == .image, let imageData = item.imageData {
-            pasteboard.clearContents()
-            pasteboard.setData(imageData, forType: .tiff)
+        pasteboard.clearContents()
+        switch item.content {
+        case .text(let text):
+            pasteboard.setString(text, forType: .string)
+        case .image(let data):
+            pasteboard.setData(data, forType: .tiff)
         }
     }
 }
-
