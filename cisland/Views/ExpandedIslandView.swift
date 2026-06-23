@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Monospace font helpers — consistent typography across the app.
 private enum Mono {
@@ -322,7 +323,7 @@ private struct WeatherCompactCard: View {
 struct ClipboardContentView: View {
     @ObservedObject private var svc = ClipboardService.shared
     @State private var selectedID: UUID?
-    @FocusState private var isFocused: Bool
+    @State private var keyMonitor: Any?
 
     /// Auto-select first item when list changes (tab switch, new content, search).
     private func autoSelectFirst() {
@@ -378,11 +379,22 @@ struct ClipboardContentView: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 6)
                     }
-                    .focusable()
-                    .focused($isFocused)
-                    .focusEffectDisabled()
-                    .onMoveCommand { direction in
-                        moveSelection(direction, proxy: proxy)
+                    .onReceive(keyEventPublisher) { keyCode in
+                        let items = Array(svc.filteredItems.prefix(50))
+                        guard !items.isEmpty else { return }
+                        let idx = items.firstIndex(where: { $0.id == selectedID })
+                        switch keyCode {
+                        case 126: // Up arrow
+                            let next = idx.map { max($0 - 1, 0) } ?? 0
+                            selectedID = items[next].id
+                            proxy.scrollTo(selectedID, anchor: .center)
+                        case 125: // Down arrow
+                            let next = idx.map { min($0 + 1, items.count - 1) } ?? 0
+                            selectedID = items[next].id
+                            proxy.scrollTo(selectedID, anchor: .center)
+                        default:
+                            break
+                        }
                     }
                 }
             }
@@ -390,27 +402,31 @@ struct ClipboardContentView: View {
         .frame(height: 260)
         .onAppear {
             autoSelectFirst()
-            isFocused = true
+            installKeyMonitor()
+        }
+        .onDisappear {
+            uninstallKeyMonitor()
         }
         .onChange(of: svc.filteredItems.map(\.id)) { _ in autoSelectFirst() }
     }
 
-    private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {
-        let items = Array(svc.filteredItems.prefix(50))
-        guard !items.isEmpty else { return }
-        let currentIdx = items.firstIndex(where: { $0.id == selectedID })
-        switch direction {
-        case .up:
-            let next = currentIdx.map { max($0 - 1, 0) } ?? 0
-            selectedID = items[next].id
-            proxy.scrollTo(selectedID, anchor: .center)
-        case .down:
-            let next = currentIdx.map { min($0 + 1, items.count - 1) } ?? 0
-            selectedID = items[next].id
-            proxy.scrollTo(selectedID, anchor: .center)
-        default:
-            break
+    // MARK: - Keyboard via NSEvent (reliable on macOS, unlike @FocusState)
+
+    private let keyEventPublisher = PassthroughSubject<UInt16, Never>()
+
+    private func installKeyMonitor() {
+        uninstallKeyMonitor()
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            if event.keyCode == 125 || event.keyCode == 126 {
+                keyEventPublisher.send(event.keyCode)
+                return nil // consume the event
+            }
+            return event
         }
+    }
+
+    private func uninstallKeyMonitor() {
+        if let m = keyMonitor { NSEvent.removeMonitor(m); keyMonitor = nil }
     }
 
     @ViewBuilder
