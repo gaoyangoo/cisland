@@ -9,12 +9,6 @@
 import Foundation
 import CoreLocation
 
-protocol WeatherServiceDelegate: AnyObject {
-    func weatherServiceDidUpdateWeather(_ weatherService: WeatherService)
-    func weatherServiceDidFailWithError(_ weatherService: WeatherService, error: Error)
-}
-
-// Protocol for value types (structs)
 protocol WeatherServiceDelegateProtocol {
     func weatherServiceDidUpdateWeather(_ weatherService: WeatherService)
     func weatherServiceDidFailWithError(_ weatherService: WeatherService, error: Error)
