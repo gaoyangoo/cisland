@@ -17,15 +17,21 @@ struct ContentHeightKey: PreferenceKey {
 
 struct ExpandedIslandView: View {
     @ObservedObject private var registry = ModuleRegistry.shared
+    @Namespace private var tabNamespace
     var onHeightChange: ((CGFloat) -> Void)?
 
     var body: some View {
         VStack(spacing: 0) {
             mainContent
+                .id(registry.activeModuleIndex)
+                .transition(.opacity)
+                .animation(.easeInOut(duration: 0.2), value: registry.activeModuleIndex)
             bottomTabBar
         }
         .onPreferenceChange(ContentHeightKey.self) { height in
-            onHeightChange?(height)
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                onHeightChange?(height)
+            }
         }
     }
 
@@ -55,26 +61,58 @@ struct ExpandedIslandView: View {
     // MARK: Bottom Tab Bar
 
     private var bottomTabBar: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 2) {
             ForEach(Array(registry.modules.enumerated()), id: \.offset) { i, m in
                 let active = i == registry.activeModuleIndex
-                Button(action: { registry.setActiveModule(at: i) }) {
-                    VStack(spacing: 1) {
-                        Image(systemName: m.tabIcon)
-                            .font(.system(size: 10, weight: .regular))
-                        Text(m.displayName)
-                            .font(.system(size: 8, weight: .medium))
+                Button(action: {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        registry.setActiveModule(at: i)
                     }
-                    .foregroundColor(active ? m.accentColor : .white.opacity(0.35))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 28)
-                    .contentShape(Rectangle())
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: m.tabIcon)
+                            .font(.system(size: 11, weight: .medium))
+                        if active {
+                            Text(m.displayName)
+                                .font(.system(size: 10, weight: .semibold))
+                                .transition(.opacity.combined(with: .scale(scale: 0.8)))
+                        }
+                    }
+                    .foregroundColor(active ? .white : .white.opacity(0.45))
+                    .padding(.horizontal, active ? 14 : 10)
+                    .padding(.vertical, 7)
+                    .background(
+                        Group {
+                            if active {
+                                Capsule()
+                                    .fill(m.accentColor)
+                                    .matchedGeometryEffect(id: "tabPill", in: tabNamespace)
+                            }
+                        }
+                    )
+                    .animation(.spring(response: 0.35, dampingFraction: 0.75), value: active)
                 }
                 .buttonStyle(.plain)
             }
+
+            Spacer()
+
+            Button(action: { /* settings */ }) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.white.opacity(0.45))
+                    .padding(6)
+            }
+            .buttonStyle(.plain)
         }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
+        .background(
+            Capsule()
+                .fill(Color.white.opacity(0.08))
+        )
         .padding(.horizontal, 8)
-        .padding(.bottom, 4)
+        .padding(.bottom, 6)
     }
 }
 

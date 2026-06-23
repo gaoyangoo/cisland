@@ -19,7 +19,13 @@
       "Bash(npx claude-hud *)",
       "Bash(pip3 list *)",
       "Bash(fc-list)",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(xcodebuild -project cisland.xcodeproj -scheme cisland build)",
+      "Bash(top -l 1 -n 20 -o cpu)",
+      "Bash(ps aux *)",
+      "Bash(vm_stat)",
+      "Bash(sysctl hw.memsize)",
+      "Bash(memory_pressure)"
     ]
   },
   "spinnerTipsEnabled": false

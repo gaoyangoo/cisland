@@ -110,12 +110,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case 123: // Left arrow
                 let prev = (registry.activeModuleIndex - 1 + count) % count
                 registry.setActiveModule(at: prev)
-                self.resizePanelIfVisible()
                 return nil
             case 124: // Right arrow
                 let next = (registry.activeModuleIndex + 1) % count
                 registry.setActiveModule(at: next)
-                self.resizePanelIfVisible()
                 return nil
             default:
                 return event

@@ -1,45 +1,137 @@
+import Carbon
 import Cocoa
 
+/// A system-wide global hotkey using Carbon RegisterEventHotKey.
+/// No Accessibility permission required — the OS reserves the key combo.
 final class Hotkey {
-    private let key: KeyCode
+    private let keyCode: UInt16
     private let modifiers: NSEvent.ModifierFlags
     private let callback: () -> Void
-    private var globalMonitor: Any?
-    private var localMonitor: Any?
+    private var hotKeyRef: EventHotKeyRef?
+    private let hotKeyID: EventHotKeyID
+
+    // Shared across all Hotkey instances — only one Carbon event handler needed per process
+    private static var installedHandlerRef: EventHandlerRef?
+    private static var activeHotkeys: [UInt32: Hotkey] = [:]
+    private static let signature = OSType(0x434C_5553) // "CLUS"
 
     init(key: KeyCode, modifiers: NSEvent.ModifierFlags, callback: @escaping () -> Void) {
-        self.key = key
+        self.keyCode = key.rawValue
         self.modifiers = modifiers
         self.callback = callback
+
+        var id = EventHotKeyID()
+        id.signature = Self.signature
+        id.id = UInt32(Self.activeHotkeys.count + 1)
+        self.hotKeyID = id
     }
 
     func register() {
-        // Global monitor: works when ANY app is frontmost (needs Accessibility permission)
-        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            self?.handleEvent(event)
+        // Install the shared Carbon event handler on first use
+        if Self.installedHandlerRef == nil {
+            var eventType = EventTypeSpec(
+                eventClass: OSType(kEventClassKeyboard),
+                eventKind: UInt32(kEventHotKeyPressed)
+            )
+
+            // Must use a non-optional local variable for the out-pointer
+            var handlerRef: EventHandlerRef?
+            let status = InstallEventHandler(
+                GetApplicationEventTarget(),
+                hotkeyEventHandler,
+                1,
+                &eventType,
+                nil, // userData — we use the static dictionary instead
+                &handlerRef
+            )
+            if status == noErr {
+                Self.installedHandlerRef = handlerRef
+            } else {
+                print("[Hotkey] InstallEventHandler failed: \(status)")
+                return
+            }
         }
 
-        // Local monitor: works when cisland itself is frontmost (no permission needed)
-        localMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            self?.handleEvent(event)
-            return event
-        }
+        // Convert NSEvent.ModifierFlags → Carbon modifiers
+        var carbonModifiers: UInt32 = 0
+        if modifiers.contains(.command) { carbonModifiers |= UInt32(cmdKey) }
+        if modifiers.contains(.shift)   { carbonModifiers |= UInt32(shiftKey) }
+        if modifiers.contains(.option)  { carbonModifiers |= UInt32(optionKey) }
+        if modifiers.contains(.control) { carbonModifiers |= UInt32(controlKey) }
 
-        // Hotkey registered
-    }
+        var ref: EventHotKeyRef?
+        let status = RegisterEventHotKey(
+            UInt32(keyCode),
+            carbonModifiers,
+            hotKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &ref
+        )
 
-    private func handleEvent(_ event: NSEvent) {
-        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        if flags == modifiers, event.keyCode == key.rawValue {
-            callback()
+        if status == noErr {
+            hotKeyRef = ref
+            Self.activeHotkeys[hotKeyID.id] = self
+        } else if status == -9875 {
+            print("[Hotkey] RegisterEventHotKey: hotkey already registered by another app " +
+                  "(key=\(keyCode), mods=\(carbonModifiers))")
+        } else {
+            print("[Hotkey] RegisterEventHotKey failed: \(status) " +
+                  "(key=\(keyCode), mods=\(carbonModifiers))")
         }
     }
 
     func unregister() {
-        if let m = globalMonitor { NSEvent.removeMonitor(m) }
-        if let m = localMonitor { NSEvent.removeMonitor(m) }
-        globalMonitor = nil
-        localMonitor = nil
+        if let ref = hotKeyRef {
+            UnregisterEventHotKey(ref)
+            hotKeyRef = nil
+        }
+        Self.activeHotkeys.removeValue(forKey: hotKeyID.id)
+
+        // Tear down the shared handler when no hotkeys remain
+        if Self.activeHotkeys.isEmpty, let handler = Self.installedHandlerRef {
+            RemoveEventHandler(handler)
+            Self.installedHandlerRef = nil
+        }
+    }
+}
+
+// MARK: - Carbon Event Handler Callback
+
+/// C function pointer that Carbon can call. Looks up the Hotkey instance and fires its callback.
+private func hotkeyEventHandler(
+    _ handler: EventHandlerCallRef?,
+    _ event: EventRef?,
+    _ userData: UnsafeMutableRawPointer?
+) -> OSStatus {
+    var hotKeyID = EventHotKeyID()
+    let err = GetEventParameter(
+        event,
+        EventParamName(kEventParamDirectObject),
+        EventParamType(typeEventHotKeyID),
+        nil,
+        MemoryLayout<EventHotKeyID>.size,
+        nil,
+        &hotKeyID
+    )
+    guard err == noErr else { return err }
+
+    if let hotkey = Hotkey.lookup(hotKeyID.id) {
+        hotkey.invokeCallback()
+    }
+    return noErr
+}
+
+// Expose internals to the fileprivate handler
+extension Hotkey {
+    fileprivate static func lookup(_ id: UInt32) -> Hotkey? {
+        return activeHotkeys[id]
+    }
+
+    fileprivate func invokeCallback() {
+        DispatchQueue.main.async { [weak self] in
+            self?.callback()
+        }
     }
 }
 
