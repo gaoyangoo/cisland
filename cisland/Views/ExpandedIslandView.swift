@@ -1,8 +1,5 @@
 import SwiftUI
 
-private let cardBg = Color.white.opacity(0.06)
-private let cardRadius: CGFloat = 10
-
 // MARK: - Content Height PreferenceKey
 
 /// Reports the ideal content height from SwiftUI to AppKit for window animation.
@@ -90,20 +87,21 @@ struct ExpandedIslandView: View {
                             }
                         }
                     )
-                    .animation(.spring(response: 0.35, dampingFraction: 0.75), value: active)
                 }
                 .buttonStyle(.plain)
             }
 
             Spacer()
 
-            Button(action: { /* settings */ }) {
+            // Settings button — placeholder, disabled until settings implemented
+            Button(action: {}) {
                 Image(systemName: "gearshape")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.white.opacity(0.45))
                     .padding(6)
             }
             .buttonStyle(.plain)
+            .disabled(true)
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 5)
@@ -120,46 +118,211 @@ struct ExpandedIslandView: View {
 
 struct InfoDashboardView: View {
     var body: some View {
-        HStack(alignment: .center, spacing: 6) {
-            // Music
-            VStack(spacing: 4) {
-                Image(systemName: "music.note").font(.system(size: 10)).foregroundColor(.pink)
-                Text("Music").font(.system(size: 9, weight: .semibold)).foregroundColor(.white.opacity(0.7))
-                RoundedRectangle(cornerRadius: 6).fill(Color.white.opacity(0.08)).frame(width: 30, height: 30)
-                    .overlay(Image(systemName: "music.note.list").font(.caption2).foregroundColor(.white.opacity(0.3)))
-                Text("Not Playing").font(.system(size: 9)).foregroundColor(.white.opacity(0.5))
-            }
-            .padding(8).frame(maxWidth: .infinity, maxHeight: .infinity).background(cardBg).cornerRadius(cardRadius)
-
-            // Calendar
-            VStack(spacing: 4) {
-                Image(systemName: "calendar").font(.system(size: 10)).foregroundColor(.blue)
-                Text("Calendar").font(.system(size: 9, weight: .semibold)).foregroundColor(.white.opacity(0.7))
-                VStack(spacing: 4) {
-                    ForEach(["Team Meeting", "Lunch", "Review"], id: \.self) { e in
-                        HStack(spacing: 4) {
-                            Circle().fill(.blue).frame(width: 4, height: 4)
-                            Text(e).font(.system(size: 9)).foregroundColor(.white).lineLimit(1)
-                            Spacer()
-                        }
-                    }
-                }
-                Spacer()
-            }
-            .padding(8).frame(maxWidth: .infinity, maxHeight: .infinity).background(cardBg).cornerRadius(cardRadius)
-
-            // Weather
-            VStack(spacing: 4) {
-                Image(systemName: "cloud.sun.fill").font(.system(size: 10)).foregroundColor(.orange)
-                Text("Weather").font(.system(size: 9, weight: .semibold)).foregroundColor(.white.opacity(0.7))
-                Image(systemName: "sun.max.fill").font(.system(size: 22)).foregroundColor(.yellow)
-                Text("24.5°C").font(.system(size: 18, weight: .bold)).foregroundColor(.white)
-                Spacer()
-            }
-            .padding(8).frame(maxWidth: .infinity, maxHeight: .infinity).background(cardBg).cornerRadius(cardRadius)
+        HStack(alignment: .top, spacing: 6) {
+            MusicCompactCard()
+            CalendarCompactCard()
+            WeatherCompactCard()
         }
-        .padding(8)
-        .frame(height: 120)
+        .padding(6)
+        .frame(height: 130)
+    }
+}
+
+// MARK: - Music Compact Card
+
+private struct MusicCompactCard: View {
+    @StateObject private var svc = MusicService()
+
+    var body: some View {
+        VStack(spacing: 6) {
+            // Album art placeholder with gradient
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.pink.opacity(0.4), Color.purple.opacity(0.3)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        )
+                    )
+                    .aspectRatio(1, contentMode: .fit)
+
+                Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white.opacity(0.7))
+            }
+
+            // Song name
+            Text(svc.musicInfo.title)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(.white)
+                .lineLimit(1)
+
+            // Artist
+            Text(svc.musicInfo.artist)
+                .font(.system(size: 9))
+                .foregroundColor(.white.opacity(0.5))
+                .lineLimit(1)
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white.opacity(0.06))
+        .cornerRadius(10)
+        .onAppear { svc.start() }
+    }
+}
+
+// MARK: - Calendar Compact Card
+
+private struct CalendarCompactCard: View {
+    @ObservedObject private var svc = CalendarService()
+    @State private var now = Date()
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+
+    private let dayFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "E"; return f
+    }()
+    private let dayNumFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "d"; return f
+    }()
+    private let timeFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "h:mm a"; return f
+    }()
+
+    var body: some View {
+        VStack(spacing: 6) {
+            // Week strip
+            HStack(spacing: 2) {
+                ForEach(weekDates(), id: \.self) { date in
+                    VStack(spacing: 2) {
+                        Text(dayFormatter.string(from: date))
+                            .font(.system(size: 8, weight: .medium))
+                            .foregroundColor(.white.opacity(calendar.isDateInToday(date) ? 1 : 0.5))
+                        Text(dayNumFormatter.string(from: date))
+                            .font(.system(size: 10, weight: calendar.isDateInToday(date) ? .bold : .regular))
+                            .foregroundColor(.white)
+
+                        // Event indicator — gradient bar if events on this day
+                        RoundedRectangle(cornerRadius: 1)
+                            .fill(
+                                hasEvents(on: date)
+                                    ? AnyShapeStyle(LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .leading, endPoint: .trailing))
+                                    : AnyShapeStyle(Color.clear)
+                            )
+                            .frame(height: 2)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+
+            Spacer()
+
+            // Current time with gradient
+            Text(timeFormatter.string(from: now))
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color.purple, Color.blue, Color.cyan],
+                        startPoint: .leading, endPoint: .trailing
+                    )
+                )
+
+            Text({
+                let f = DateFormatter(); f.dateFormat = "EEEE, MMMM d"; return f.string(from: now)
+            }())
+                .font(.system(size: 8))
+                .foregroundColor(.white.opacity(0.4))
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white.opacity(0.06))
+        .cornerRadius(10)
+        .onReceive(timer) { t in now = t }
+    }
+
+    private func weekDates() -> [Date] {
+        let cal = calendar
+        let today = Date()
+        let weekday = cal.component(.weekday, from: today)
+        let mondayOffset = weekday - cal.firstWeekday
+        let monday = cal.date(byAdding: .day, value: -mondayOffset, to: today)!
+        return (0..<7).map { cal.date(byAdding: .day, value: $0, to: monday)! }
+    }
+
+    private func hasEvents(on date: Date) -> Bool {
+        svc.events.contains { calendar.isDate($0.startDate, inSameDayAs: date) }
+    }
+
+    private var calendar: Calendar { Calendar.current }
+}
+
+// MARK: - Weather Compact Card
+
+private struct WeatherCompactCard: View {
+    @ObservedObject private var svc = WeatherService.shared
+
+    var body: some View {
+        VStack(spacing: 4) {
+            if let weather = svc.currentWeather {
+                Image(systemName: iconFor(code: weather.conditionCode))
+                    .font(.system(size: 24))
+                    .foregroundColor(iconColorFor(code: weather.conditionCode))
+
+                Text(weather.temperatureString)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
+
+                Text("San Francisco")
+                    .font(.system(size: 9))
+                    .foregroundColor(.white.opacity(0.5))
+            } else {
+                Image(systemName: "cloud.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white.opacity(0.2))
+                Text("--°C")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white.opacity(0.3))
+                Text("Loading...")
+                    .font(.system(size: 9))
+                    .foregroundColor(.white.opacity(0.3))
+            }
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white.opacity(0.06))
+        .cornerRadius(10)
+        .onAppear { svc.start() }
+    }
+
+    private func iconFor(code: Int) -> String {
+        switch code {
+        case 0, 1: return "sun.max.fill"
+        case 2: return "cloud.sun.fill"
+        case 3: return "cloud.fill"
+        case 45, 48: return "smoke.fill"
+        case 51...57: return "cloud.drizzle.fill"
+        case 61...67: return "cloud.rain.fill"
+        case 71...77: return "cloud.snow.fill"
+        case 80...82: return "cloud.heavyrain.fill"
+        case 85, 86: return "cloud.snow.fill"
+        case 95...99: return "cloud.bolt.rain.fill"
+        default: return "cloud.fill"
+        }
+    }
+
+    private func iconColorFor(code: Int) -> Color {
+        switch code {
+        case 0, 1: return .yellow
+        case 2: return .blue
+        case 3: return .gray
+        case 45, 48: return .gray
+        case 51...67: return .blue
+        case 71...77, 85, 86: return .cyan
+        case 80...82: return .blue
+        case 95...99: return .yellow
+        default: return .gray
+        }
     }
 }
 
