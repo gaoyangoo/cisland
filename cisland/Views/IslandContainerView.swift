@@ -2,11 +2,14 @@ import SwiftUI
 
 public struct IslandContainerView: View {
     @ObservedObject private var registry = ModuleRegistry.shared
+    var onDismiss: (() -> Void)?
 
-    public init() {}
+    public init(onDismiss: (() -> Void)? = nil) {
+        self.onDismiss = onDismiss
+    }
 
     public var body: some View {
-        ExpandedIslandView()
+        ExpandedIslandView(onDismiss: onDismiss)
             .frame(width: 480)
             .background(
                 RoundedRectangle(cornerRadius: 22)

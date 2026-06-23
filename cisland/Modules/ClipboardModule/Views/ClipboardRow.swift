@@ -20,7 +20,7 @@ struct ClipboardRow: View {
 
             copyButton
         }
-        .background(isSelected ? Color.blue.opacity(0.1) : Color.clear)
+        .background(isSelected ? Color(red: 0.027, green: 0.757, blue: 0.376).opacity(0.15) : Color.clear)
         .cornerRadius(8)
         .onTapGesture {
             onTap()

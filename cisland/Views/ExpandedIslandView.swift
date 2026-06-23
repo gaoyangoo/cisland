@@ -14,6 +14,11 @@ private enum Mono {
 struct ExpandedIslandView: View {
     @ObservedObject private var registry = ModuleRegistry.shared
     @Namespace private var tabNamespace
+    var onDismiss: (() -> Void)?
+
+    init(onDismiss: (() -> Void)? = nil) {
+        self.onDismiss = onDismiss
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +37,7 @@ struct ExpandedIslandView: View {
             case "info":
                 InfoDashboardView()
             case "clipboard":
-                ClipboardContentView()
+                ClipboardContentView(onDismiss: onDismiss)
             case "keyvalue":
                 KeyValueContentView()
             default:
@@ -183,39 +188,48 @@ private struct CalendarCompactCard: View {
 
     var body: some View {
         VStack(spacing: 6) {
-            // Week strip — Mon–Sun, only today has the white underline
+            // Month at top
+            Text({
+                let f = DateFormatter(); f.dateFormat = "MMMM"; return f.string(from: now)
+            }())
+                .font(Mono.semibold(10))
+                .foregroundColor(.white.opacity(0.55))
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Week strip — Mon–Sun, today highlighted with solid background
             HStack(spacing: 2) {
                 ForEach(weekDates(), id: \.self) { date in
                     let isToday = calendar.isDate(date, inSameDayAs: now)
                     VStack(spacing: 2) {
                         Text(Self.dayFormatter.string(from: date))
                             .font(Mono.medium(8))
-                            .foregroundColor(isToday ? Self.todayColor : .white.opacity(0.5))
+                            .foregroundColor(isToday ? .white : .white.opacity(0.5))
                         Text(Self.dayNumFormatter.string(from: date))
                             .font(isToday ? Mono.bold(9) : Mono.regular(9))
-                            .foregroundColor(isToday ? Self.todayColor : .white.opacity(0.6))
-
-                        // Underline — solid white, only for today
-                        RoundedRectangle(cornerRadius: 1)
-                            .fill(isToday ? Color.white : Color.clear)
-                            .frame(height: 2)
+                            .foregroundColor(isToday ? .white : .white.opacity(0.6))
                     }
                     .frame(maxWidth: .infinity)
+                    .padding(.vertical, 3)
+                    .background(
+                        isToday
+                            ? RoundedRectangle(cornerRadius: 5).fill(Self.todayColor)
+                            : nil
+                    )
                 }
             }
 
             Spacer()
 
-            // Current time — large hour:minute, smaller seconds
+            // Current time — larger hour:minute, larger seconds
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text({
                     let f = DateFormatter(); f.dateFormat = "h:mm"; return f.string(from: now)
                 }())
-                    .font(Mono.bold(16))
+                    .font(Mono.bold(22))
                 Text({
                     let f = DateFormatter(); f.dateFormat = "ss"; return f.string(from: now)
                 }())
-                    .font(Mono.medium(9))
+                    .font(Mono.medium(12))
             }
             .foregroundStyle(
                 LinearGradient(
@@ -225,7 +239,7 @@ private struct CalendarCompactCard: View {
             )
 
             Text({
-                let f = DateFormatter(); f.dateFormat = "EEEE, MMMM d"; return f.string(from: now)
+                let f = DateFormatter(); f.dateFormat = "EEEE, d"; return f.string(from: now)
             }())
                 .font(Mono.regular(7))
                 .foregroundColor(.white.opacity(0.4))
@@ -324,6 +338,11 @@ struct ClipboardContentView: View {
     @ObservedObject private var svc = ClipboardService.shared
     @State private var selectedID: UUID?
     @State private var keyMonitor: Any?
+    var onDismiss: (() -> Void)?
+
+    init(onDismiss: (() -> Void)? = nil) {
+        self.onDismiss = onDismiss
+    }
 
     /// Auto-select first item when list changes (tab switch, new content, search).
     private func autoSelectFirst() {
@@ -364,16 +383,36 @@ struct ClipboardContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
+                let displayItems = svc.filteredItems.prefix(50).filter { item in
+                    if case .text(let text) = item.content {
+                        return !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    }
+                    return true
+                }
+                let dismiss = onDismiss
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 3) {
-                            ForEach(Array(svc.filteredItems.prefix(50).enumerated()), id: \.element.id) { idx, item in
+                        LazyVStack(spacing: 0) {
+                            ForEach(Array(displayItems.enumerated()), id: \.element.id) { idx, item in
                                 clipboardRow(item, isSelected: selectedID == item.id)
                                     .id(item.id)
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
-                                        selectedID = item.id
-                                        svc.copyToClipboard(item)
+                                        if selectedID == item.id {
+                                            svc.copyToClipboard(item)
+                                            dismiss?()
+                                        } else {
+                                            selectedID = item.id
+                                        }
                                     }
+                                    .padding(.vertical, 3)
+
+                                if idx < displayItems.count - 1 {
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.06))
+                                        .frame(height: 1)
+                                        .padding(.horizontal, 8)
+                                }
                             }
                         }
                         .padding(.horizontal, 8)
@@ -392,6 +431,11 @@ struct ClipboardContentView: View {
                             let next = idx.map { min($0 + 1, items.count - 1) } ?? 0
                             selectedID = items[next].id
                             proxy.scrollTo(selectedID, anchor: .center)
+                        case 36, 76: // Enter, numpad Enter
+                            if let selected = items.first(where: { $0.id == selectedID }) {
+                                svc.copyToClipboard(selected)
+                                dismiss?()
+                            }
                         default:
                             break
                         }
@@ -417,7 +461,7 @@ struct ClipboardContentView: View {
     private func installKeyMonitor() {
         uninstallKeyMonitor()
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            if event.keyCode == 125 || event.keyCode == 126 {
+            if [36, 76, 125, 126].contains(event.keyCode) {
                 keyEventPublisher.send(event.keyCode)
                 return nil // consume the event
             }
@@ -431,19 +475,26 @@ struct ClipboardContentView: View {
 
     @ViewBuilder
     private func clipboardRow(_ item: ClipboardItem, isSelected: Bool) -> some View {
-        let highlight = isSelected ? Color.white.opacity(0.10) : Color.clear
+        let highlight = isSelected ? Color(red: 0.027, green: 0.757, blue: 0.376).opacity(0.15) : Color.clear
         switch item.content {
         case .text(let text):
-            Text(text)
+            let displayText = text
+                .replacingOccurrences(of: "\r\n", with: " ↵ ")
+                .replacingOccurrences(of: "\n", with: " ↵ ")
+                .replacingOccurrences(of: "\r", with: " ↵ ")
+            Text(displayText)
                 .font(Mono.regular(10))
                 .foregroundColor(.white.opacity(0.85))
-                .lineLimit(2)
+                .lineLimit(4)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 5)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(highlight)
-                .contentShape(Rectangle())
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(highlight)
+                )
+                .contentShape(RoundedRectangle(cornerRadius: 6))
 
         case .image(let data):
             HStack {
@@ -462,8 +513,11 @@ struct ClipboardContentView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(highlight)
-            .contentShape(Rectangle())
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(highlight)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 6))
         }
     }
 }

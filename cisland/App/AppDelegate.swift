@@ -67,7 +67,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             p.titleVisibility = .hidden
             p.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
-            let rootView = IslandContainerView()
+            let rootView = IslandContainerView(onDismiss: { [weak self] in
+                self?.panel?.orderOut(nil)
+            })
             let hosting = NSHostingView(rootView: rootView)
             hosting.autoresizingMask = [.width, .height]
             p.contentView = hosting
