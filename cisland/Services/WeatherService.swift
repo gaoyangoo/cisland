@@ -30,6 +30,10 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
     var delegate: (any WeatherServiceDelegateProtocol)?
 
+    /// Pending coordinates for reverse geocoding after weather fetch completes.
+    private var pendingLatitude: Double?
+    private var pendingLongitude: Double?
+
     var currentWeather: WeatherModel?
     var lastUpdated: Date?
     private var isUpdating = false
@@ -89,6 +93,9 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     private func fetchWeatherForCoordinates(latitude: Double, longitude: Double) {
+        pendingLatitude = latitude
+        pendingLongitude = longitude
+
         let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&current_weather=true"
 
         guard let url = URL(string: urlString) else {
@@ -126,7 +133,7 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
                 let weather = WeatherModel(
                     temperature: temperature,
                     conditionCode: weatherCode,
-                    location: getCurrentLocationString()
+                    location: "定位中…"
                 )
 
                 self.currentWeather = weather
@@ -135,6 +142,7 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
                 DispatchQueue.main.async {
                     self.delegate?.weatherServiceDidUpdateWeather(self)
+                    self.reverseGeocodeLocation()
                 }
             } else {
                 throw NSError(domain: "WeatherService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid weather data format"])
@@ -145,12 +153,34 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
         }
     }
 
-    private func getCurrentLocationString() -> String {
-        let location = locationManager.location
-        if let coordinate = location?.coordinate {
-            return String(format: "%.2f, %.2f", coordinate.latitude, coordinate.longitude)
+    /// Reverse-geocode the pending coordinates to a Chinese place name,
+    /// then update the weather model so the UI refreshes.
+    private func reverseGeocodeLocation() {
+        guard let lat = pendingLatitude, let lon = pendingLongitude else { return }
+        let location = CLLocation(latitude: lat, longitude: lon)
+        CLGeocoder().reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "zh_CN")) { [weak self] placemarks, error in
+            guard let self = self,
+                  let pm = placemarks?.first,
+                  error == nil else { return }
+
+            // Prefer locality (city) + subLocality (district); fall back step by step.
+            let name: String = {
+                if let city = pm.locality, let district = pm.subLocality {
+                    return "\(city)\(district)"
+                }
+                if let city = pm.locality { return city }
+                if let area = pm.administrativeArea { return area }
+                return pm.name ?? "未知位置"
+            }()
+
+            var updated = self.currentWeather
+            updated?.location = name
+            self.currentWeather = updated
+
+            DispatchQueue.main.async {
+                self.delegate?.weatherServiceDidUpdateWeather(self)
+            }
         }
-        return "Default Location"
     }
 
     private func handleWeatherServiceError(_ error: Error) {
@@ -190,7 +220,7 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 struct WeatherModel {
     let temperature: Double
     let conditionCode: Int
-    let location: String
+    var location: String
 
     // Convert temperature to string with proper formatting
     var temperatureString: String {
