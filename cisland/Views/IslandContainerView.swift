@@ -81,13 +81,9 @@ public struct IslandContainerView: View {
             .padding(.top, 6)
             .frame(width: 480)
             .background(
-                ZStack {
-                    FlaredTopShape()
-                        .fill(.ultraThinMaterial)
-                    FlaredTopShape()
-                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
-                }
-                .environment(\.colorScheme, .dark)
+                FlaredTopShape()
+                    .fill(.ultraThinMaterial)
+                    .environment(\.colorScheme, .dark)
             )
             .scaleEffect(y: isVisible ? 1 : 0, anchor: .top)
             .opacity(isVisible ? 1 : 0)
