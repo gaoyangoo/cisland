@@ -1,14 +1,21 @@
 import Cocoa
 import SwiftUI
-import Combine
+
+/// NSPanel subclass that allows becoming key window so text fields work.
+final class FloatingPanel: NSPanel {
+    override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { false }
+}
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var panel: NSPanel?
+    var panel: FloatingPanel?
     var statusItem: NSStatusItem?
     var hotkey: Hotkey?
     private var arrowMonitor: Any?
-    private var cancellable: AnyCancellable?
+
+    /// Fixed panel height — tall enough for all tabs (Clipboard=290)
+    private static let panelHeight: CGFloat = 290
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -20,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         self.statusItem = item
         if let button = item.button {
-            button.title = "⚡"
+            button.title = "🍉"
             button.target = self
             button.action = #selector(togglePanel)
             button.sendAction(on: [.leftMouseDown])
@@ -28,13 +35,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setupGlobalHotkey()
         setupArrowKeyMonitor()
-
-        // Resize window when tab changes via click
-        cancellable = ModuleRegistry.shared.$activeModuleIndex
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.resizePanelIfVisible()
-            }
     }
 
     // MARK: - Toggle Panel
@@ -51,8 +51,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let width: CGFloat = 480
 
         if panel == nil {
-            let p = NSPanel(
-                contentRect: NSRect(x: 0, y: 0, width: width, height: 240),
+            let p = FloatingPanel(
+                contentRect: NSRect(x: 0, y: 0, width: width, height: Self.panelHeight),
                 styleMask: [.borderless, .fullSizeContentView, .nonactivatingPanel],
                 backing: .buffered,
                 defer: false
@@ -67,10 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             p.titleVisibility = .hidden
             p.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
-            let rootView = IslandContainerView(onHeightChange: { [weak self] h in
-                self?.contentHeight = h
-                self?.resizePanelIfVisible()
-            })
+            let rootView = IslandContainerView()
             let hosting = NSHostingView(rootView: rootView)
             hosting.autoresizingMask = [.width, .height]
             p.contentView = hosting
@@ -80,15 +77,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let p = panel, let screen = NSScreen.main ?? NSScreen.screens.first else { return }
 
         let x = screen.visibleFrame.midX - width / 2
-        let h = contentHeight
-        let y = screen.visibleFrame.maxY - h
+        let y = screen.visibleFrame.maxY - Self.panelHeight
 
-        p.setFrame(NSRect(x: x, y: y, width: width, height: h), display: true)
-        p.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        p.setFrame(NSRect(x: x, y: y, width: width, height: Self.panelHeight), display: true)
+        p.orderFront(nil)
     }
-
-    private var contentHeight: CGFloat = 160
 
     // MARK: - Global Hotkey (Shift+Cmd+O)
 
@@ -107,30 +100,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let registry = ModuleRegistry.shared
             let count = registry.modules.count
             switch event.keyCode {
-            case 123: // Left arrow
+            case 123:
                 let prev = (registry.activeModuleIndex - 1 + count) % count
                 registry.setActiveModule(at: prev)
                 return nil
-            case 124: // Right arrow
+            case 124:
                 let next = (registry.activeModuleIndex + 1) % count
                 registry.setActiveModule(at: next)
                 return nil
             default:
                 return event
             }
-        }
-    }
-
-    private func resizePanelIfVisible() {
-        guard let p = panel, p.isVisible, let screen = NSScreen.main ?? NSScreen.screens.first else { return }
-        let h = contentHeight
-        let x = screen.visibleFrame.midX - 240
-        let y = screen.visibleFrame.maxY - h
-
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.35
-            ctx.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1)
-            p.animator().setFrame(NSRect(x: x, y: y, width: 480, height: h), display: true)
         }
     }
 

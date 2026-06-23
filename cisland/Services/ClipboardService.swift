@@ -5,12 +5,16 @@ class ClipboardService: ObservableObject {
     @Published var items: [ClipboardItem] = []
     @Published var searchTerm: String = ""
 
+    static let shared = ClipboardService()
+
     private let pasteboard = NSPasteboard.general
     private let maxItems = 100
     private let storageDirectory: URL
     private let storageFile: URL
+    private var monitorTimer: Timer?
+    private var isMonitoring = false
 
-    init() {
+    private init() {
         self.storageDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             .appendingPathComponent("ClausIsland")
             .appendingPathComponent("Clipboard")
@@ -20,6 +24,10 @@ class ClipboardService: ObservableObject {
         setupStorageDirectory()
         loadItems()
         startMonitoring()
+    }
+
+    deinit {
+        stopMonitoring()
     }
 
     private func setupStorageDirectory() {
@@ -40,9 +48,17 @@ class ClipboardService: ObservableObject {
     }
 
     private func startMonitoring() {
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        guard !isMonitoring else { return }
+        isMonitoring = true
+        monitorTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.checkClipboard()
         }
+    }
+
+    private func stopMonitoring() {
+        isMonitoring = false
+        monitorTimer?.invalidate()
+        monitorTimer = nil
     }
 
     private func checkClipboard() {
@@ -55,9 +71,7 @@ class ClipboardService: ObservableObject {
                }
                return false
            }) {
-            let newItem = ClipboardItem(
-                content: .text(newText)
-            )
+            let newItem = ClipboardItem(content: .text(newText))
             addItem(newItem)
         }
 
@@ -69,9 +83,7 @@ class ClipboardService: ObservableObject {
                }
                return false
            }) {
-            let imageItem = ClipboardItem(
-                content: .image(newImage)
-            )
+            let imageItem = ClipboardItem(content: .image(newImage))
             addItem(imageItem)
         }
     }

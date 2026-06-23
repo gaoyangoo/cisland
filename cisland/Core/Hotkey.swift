@@ -13,6 +13,7 @@ final class Hotkey {
     // Shared across all Hotkey instances — only one Carbon event handler needed per process
     private static var installedHandlerRef: EventHandlerRef?
     private static var activeHotkeys: [UInt32: Hotkey] = [:]
+    private static var nextID: UInt32 = 1
     private static let signature = OSType(0x434C_5553) // "CLUS"
 
     init(key: KeyCode, modifiers: NSEvent.ModifierFlags, callback: @escaping () -> Void) {
@@ -22,7 +23,8 @@ final class Hotkey {
 
         var id = EventHotKeyID()
         id.signature = Self.signature
-        id.id = UInt32(Self.activeHotkeys.count + 1)
+        id.id = Self.nextID
+        Self.nextID += 1
         self.hotKeyID = id
     }
 

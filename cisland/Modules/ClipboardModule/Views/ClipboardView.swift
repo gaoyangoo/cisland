@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ClipboardView: View {
-    @StateObject private var clipboardService = ClipboardService()
+    @ObservedObject private var clipboardService = ClipboardService.shared
     @State private var selectedItems: Set<UUID> = []
     @State private var showingClearAlert = false
 

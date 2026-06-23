@@ -1,13 +1,11 @@
 import SwiftUI
 
-// MARK: - Content Height PreferenceKey
-
-/// Reports the ideal content height from SwiftUI to AppKit for window animation.
-struct ContentHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 160
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
+/// Monospace font helpers — consistent typography across the app.
+private enum Mono {
+    static func regular(_ size: CGFloat) -> Font { .system(size: size, weight: .regular, design: .monospaced) }
+    static func medium(_ size: CGFloat) -> Font { .system(size: size, weight: .medium, design: .monospaced) }
+    static func semibold(_ size: CGFloat) -> Font { .system(size: size, weight: .semibold, design: .monospaced) }
+    static func bold(_ size: CGFloat) -> Font { .system(size: size, weight: .bold, design: .monospaced) }
 }
 
 // MARK: - Main Panel
@@ -15,20 +13,13 @@ struct ContentHeightKey: PreferenceKey {
 struct ExpandedIslandView: View {
     @ObservedObject private var registry = ModuleRegistry.shared
     @Namespace private var tabNamespace
-    var onHeightChange: ((CGFloat) -> Void)?
 
     var body: some View {
         VStack(spacing: 0) {
             mainContent
                 .id(registry.activeModuleIndex)
                 .transition(.opacity)
-                .animation(.easeInOut(duration: 0.2), value: registry.activeModuleIndex)
             bottomTabBar
-        }
-        .onPreferenceChange(ContentHeightKey.self) { height in
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                onHeightChange?(height)
-            }
         }
     }
 
@@ -47,42 +38,39 @@ struct ExpandedIslandView: View {
                 registry.activeModule.expandedView.padding(12)
             }
         }
-        .background(
-            GeometryReader { geo in
-                Color.clear
-                    .preference(key: ContentHeightKey.self, value: geo.size.height)
-            }
-        )
     }
 
     // MARK: Bottom Tab Bar
 
+    /// Unified accent color for the active tab pill — dark green matching the Info module.
+    private static let tabAccent = Color(red: 0.05, green: 0.45, blue: 0.25)
+
     private var bottomTabBar: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: 1) {
             ForEach(Array(registry.modules.enumerated()), id: \.offset) { i, m in
                 let active = i == registry.activeModuleIndex
                 Button(action: {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
                         registry.setActiveModule(at: i)
                     }
                 }) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Image(systemName: m.tabIcon)
-                            .font(.system(size: 11, weight: .medium))
+                            .font(.system(size: 9, weight: .medium))
                         if active {
                             Text(m.displayName)
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(Mono.semibold(9))
                                 .transition(.opacity.combined(with: .scale(scale: 0.8)))
                         }
                     }
                     .foregroundColor(active ? .white : .white.opacity(0.45))
-                    .padding(.horizontal, active ? 14 : 10)
-                    .padding(.vertical, 7)
+                    .padding(.horizontal, active ? 12 : 8)
+                    .padding(.vertical, 4)
                     .background(
                         Group {
                             if active {
                                 Capsule()
-                                    .fill(m.accentColor)
+                                    .fill(Self.tabAccent)
                                     .matchedGeometryEffect(id: "tabPill", in: tabNamespace)
                             }
                         }
@@ -93,24 +81,23 @@ struct ExpandedIslandView: View {
 
             Spacer()
 
-            // Settings button — placeholder, disabled until settings implemented
             Button(action: {}) {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.white.opacity(0.45))
-                    .padding(6)
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(.white.opacity(0.35))
+                    .padding(3)
             }
             .buttonStyle(.plain)
             .disabled(true)
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 5)
+        .padding(.horizontal, 5)
+        .padding(.vertical, 3)
         .background(
             Capsule()
                 .fill(Color.white.opacity(0.08))
         )
         .padding(.horizontal, 8)
-        .padding(.bottom, 6)
+        .padding(.bottom, 4)
     }
 }
 
@@ -134,39 +121,45 @@ private struct MusicCompactCard: View {
     @StateObject private var svc = MusicService()
 
     var body: some View {
-        VStack(spacing: 6) {
-            // Album art placeholder with gradient
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.pink.opacity(0.4), Color.purple.opacity(0.3)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        )
+        ZStack(alignment: .bottom) {
+            // Album art — fills entire card
+            RoundedRectangle(cornerRadius: 10)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
                     )
-                    .aspectRatio(1, contentMode: .fit)
+                )
 
-                Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
-                    .font(.system(size: 24))
-                    .foregroundColor(.white.opacity(0.7))
-            }
-
-            // Song name
-            Text(svc.musicInfo.title)
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundColor(.white)
-                .lineLimit(1)
-
-            // Artist
-            Text(svc.musicInfo.artist)
-                .font(.system(size: 9))
+            // Music note icon centered
+            Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
+                .font(.system(size: 30))
                 .foregroundColor(.white.opacity(0.5))
-                .lineLimit(1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+            // Song + Artist overlay at bottom
+            VStack(spacing: 2) {
+                Text(svc.musicInfo.title)
+                    .font(Mono.semibold(9))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                Text(svc.musicInfo.artist)
+                    .font(Mono.regular(8))
+                    .foregroundColor(.white.opacity(0.6))
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.black.opacity(0.5), Color.black.opacity(0.2), Color.clear],
+                    startPoint: .bottom, endPoint: .top
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
-        .padding(6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white.opacity(0.06))
-        .cornerRadius(10)
         .onAppear { svc.start() }
     }
 }
@@ -174,42 +167,36 @@ private struct MusicCompactCard: View {
 // MARK: - Calendar Compact Card
 
 private struct CalendarCompactCard: View {
-    @ObservedObject private var svc = CalendarService()
     @State private var now = Date()
-    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
-    private let dayFormatter: DateFormatter = {
+    private static let dayFormatter: DateFormatter = {
         let f = DateFormatter(); f.dateFormat = "E"; return f
     }()
-    private let dayNumFormatter: DateFormatter = {
+    private static let dayNumFormatter: DateFormatter = {
         let f = DateFormatter(); f.dateFormat = "d"; return f
     }()
-    private let timeFormatter: DateFormatter = {
-        let f = DateFormatter(); f.dateFormat = "h:mm a"; return f
-    }()
+
+    /// Dark green matching the tab accent / Info module.
+    private static let todayColor = Color(red: 0.05, green: 0.45, blue: 0.25)
 
     var body: some View {
         VStack(spacing: 6) {
-            // Week strip
+            // Week strip — Mon–Sun, only today has the white underline
             HStack(spacing: 2) {
                 ForEach(weekDates(), id: \.self) { date in
+                    let isToday = calendar.isDate(date, inSameDayAs: now)
                     VStack(spacing: 2) {
-                        Text(dayFormatter.string(from: date))
-                            .font(.system(size: 8, weight: .medium))
-                            .foregroundColor(.white.opacity(calendar.isDateInToday(date) ? 1 : 0.5))
-                        Text(dayNumFormatter.string(from: date))
-                            .font(.system(size: 10, weight: calendar.isDateInToday(date) ? .bold : .regular))
-                            .foregroundColor(.white)
+                        Text(Self.dayFormatter.string(from: date))
+                            .font(Mono.medium(8))
+                            .foregroundColor(isToday ? Self.todayColor : .white.opacity(0.5))
+                        Text(Self.dayNumFormatter.string(from: date))
+                            .font(isToday ? Mono.bold(9) : Mono.regular(9))
+                            .foregroundColor(isToday ? Self.todayColor : .white.opacity(0.6))
 
-                        // Event indicator — gradient bar if events on this day
+                        // Underline — solid white, only for today
                         RoundedRectangle(cornerRadius: 1)
-                            .fill(
-                                hasEvents(on: date)
-                                    ? AnyShapeStyle(LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .leading, endPoint: .trailing))
-                                    : AnyShapeStyle(Color.clear)
-                            )
+                            .fill(isToday ? Color.white : Color.clear)
                             .frame(height: 2)
                     }
                     .frame(maxWidth: .infinity)
@@ -218,20 +205,28 @@ private struct CalendarCompactCard: View {
 
             Spacer()
 
-            // Current time with gradient
-            Text(timeFormatter.string(from: now))
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [Color.purple, Color.blue, Color.cyan],
-                        startPoint: .leading, endPoint: .trailing
-                    )
+            // Current time — large hour:minute, smaller seconds
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text({
+                    let f = DateFormatter(); f.dateFormat = "h:mm"; return f.string(from: now)
+                }())
+                    .font(Mono.bold(16))
+                Text({
+                    let f = DateFormatter(); f.dateFormat = "ss"; return f.string(from: now)
+                }())
+                    .font(Mono.medium(9))
+            }
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.purple, Color.blue, Color.cyan],
+                    startPoint: .leading, endPoint: .trailing
                 )
+            )
 
             Text({
                 let f = DateFormatter(); f.dateFormat = "EEEE, MMMM d"; return f.string(from: now)
             }())
-                .font(.system(size: 8))
+                .font(Mono.regular(7))
                 .foregroundColor(.white.opacity(0.4))
         }
         .padding(6)
@@ -241,17 +236,13 @@ private struct CalendarCompactCard: View {
         .onReceive(timer) { t in now = t }
     }
 
+    /// Returns Mon–Sun dates for the week containing `now`.
     private func weekDates() -> [Date] {
         let cal = calendar
-        let today = Date()
-        let weekday = cal.component(.weekday, from: today)
-        let mondayOffset = weekday - cal.firstWeekday
-        let monday = cal.date(byAdding: .day, value: -mondayOffset, to: today)!
+        let weekday = cal.component(.weekday, from: now)
+        let offsetToMonday = (weekday + 5) % 7  // weekday 2 (Mon) → 0, 3 (Tue) → 1, … 1 (Sun) → 6
+        let monday = cal.startOfDay(for: cal.date(byAdding: .day, value: -offsetToMonday, to: now)!)
         return (0..<7).map { cal.date(byAdding: .day, value: $0, to: monday)! }
-    }
-
-    private func hasEvents(on date: Date) -> Bool {
-        svc.events.contains { calendar.isDate($0.startDate, inSameDayAs: date) }
     }
 
     private var calendar: Calendar { Calendar.current }
@@ -270,21 +261,21 @@ private struct WeatherCompactCard: View {
                     .foregroundColor(iconColorFor(code: weather.conditionCode))
 
                 Text(weather.temperatureString)
-                    .font(.system(size: 22, weight: .bold))
+                    .font(Mono.bold(17))
                     .foregroundColor(.white)
 
-                Text("San Francisco")
-                    .font(.system(size: 9))
+                Text(weather.location)
+                    .font(Mono.regular(8))
                     .foregroundColor(.white.opacity(0.5))
             } else {
                 Image(systemName: "cloud.fill")
                     .font(.system(size: 24))
                     .foregroundColor(.white.opacity(0.2))
                 Text("--°C")
-                    .font(.system(size: 22, weight: .bold))
+                    .font(Mono.bold(17))
                     .foregroundColor(.white.opacity(0.3))
                 Text("Loading...")
-                    .font(.system(size: 9))
+                    .font(Mono.regular(8))
                     .foregroundColor(.white.opacity(0.3))
             }
         }
@@ -329,33 +320,134 @@ private struct WeatherCompactCard: View {
 // MARK: - Clipboard Content
 
 struct ClipboardContentView: View {
-    @StateObject private var svc = ClipboardService()
+    @ObservedObject private var svc = ClipboardService.shared
+    @State private var selectedID: UUID?
+    @FocusState private var isFocused: Bool
+
+    /// Auto-select first item when list changes (tab switch, new content, search).
+    private func autoSelectFirst() {
+        if let first = svc.filteredItems.first, selectedID == nil || !svc.filteredItems.contains(where: { $0.id == selectedID }) {
+            selectedID = first.id
+        }
+    }
 
     var body: some View {
-        if svc.items.isEmpty {
-            VStack(spacing: 8) {
-                Image(systemName: "clipboard").font(.system(size: 24)).foregroundColor(.white.opacity(0.2))
-                Text("Clipboard is empty").font(.system(size: 13)).foregroundColor(.white.opacity(0.35))
+        VStack(spacing: 0) {
+            // Search field
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.white.opacity(0.35))
+                TextField("Search clipboard...", text: $svc.searchTerm)
+                    .textFieldStyle(.plain)
+                    .font(Mono.regular(10))
+                    .foregroundColor(.white)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-            ScrollView {
-                LazyVStack(spacing: 3) {
-                    ForEach(svc.items.prefix(30), id: \.id) { item in
-                        HStack(spacing: 8) {
-                            Image(systemName: item.isText ? "doc.text" : "photo")
-                                .font(.system(size: 11)).foregroundColor(.white.opacity(0.4))
-                            if case .text(let t) = item.content {
-                                Text(t).font(.system(size: 11)).foregroundColor(.white.opacity(0.8)).lineLimit(1)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(Color.white.opacity(0.08))
+            .cornerRadius(6)
+            .padding(.horizontal, 8)
+            .padding(.top, 8)
+
+            if svc.filteredItems.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "clipboard")
+                        .font(.system(size: 24))
+                        .foregroundColor(.white.opacity(0.2))
+                    Text(svc.searchTerm.isEmpty
+                         ? "Clipboard is empty"
+                         : "No items match \"\(svc.searchTerm)\"")
+                        .font(Mono.regular(10))
+                        .foregroundColor(.white.opacity(0.35))
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 3) {
+                            ForEach(Array(svc.filteredItems.prefix(50).enumerated()), id: \.element.id) { idx, item in
+                                clipboardRow(item, isSelected: selectedID == item.id)
+                                    .id(item.id)
+                                    .onTapGesture {
+                                        selectedID = item.id
+                                        svc.copyToClipboard(item)
+                                    }
                             }
-                            Spacer()
                         }
-                        .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(Color.white.opacity(0.04)).cornerRadius(6)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                    }
+                    .focusable()
+                    .focused($isFocused)
+                    .focusEffectDisabled()
+                    .onMoveCommand { direction in
+                        moveSelection(direction, proxy: proxy)
                     }
                 }
-                .padding(8)
             }
+        }
+        .frame(height: 260)
+        .onAppear {
+            autoSelectFirst()
+            isFocused = true
+        }
+        .onChange(of: svc.filteredItems.map(\.id)) { _ in autoSelectFirst() }
+    }
+
+    private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {
+        let items = Array(svc.filteredItems.prefix(50))
+        guard !items.isEmpty else { return }
+        let currentIdx = items.firstIndex(where: { $0.id == selectedID })
+        switch direction {
+        case .up:
+            let next = currentIdx.map { max($0 - 1, 0) } ?? 0
+            selectedID = items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        case .down:
+            let next = currentIdx.map { min($0 + 1, items.count - 1) } ?? 0
+            selectedID = items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        default:
+            break
+        }
+    }
+
+    @ViewBuilder
+    private func clipboardRow(_ item: ClipboardItem, isSelected: Bool) -> some View {
+        let highlight = isSelected ? Color.white.opacity(0.10) : Color.clear
+        switch item.content {
+        case .text(let text):
+            Text(text)
+                .font(Mono.regular(10))
+                .foregroundColor(.white.opacity(0.85))
+                .lineLimit(2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(highlight)
+                .contentShape(Rectangle())
+
+        case .image(let data):
+            HStack {
+                if let nsImage = NSImage(data: data) {
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 60)
+                        .cornerRadius(4)
+                }
+                Text("Image — \(ByteCountFormatter.string(fromByteCount: Int64(data.count), countStyle: .file))")
+                    .font(Mono.regular(9))
+                    .foregroundColor(.white.opacity(0.4))
+                Spacer()
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(highlight)
+            .contentShape(Rectangle())
         }
     }
 }
