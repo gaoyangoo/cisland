@@ -1,0 +1,514 @@
+import SwiftUI
+
+/// Monospace font helpers — consistent typography across the app.
+private enum Mono {
+    static func regular(_ size: CGFloat) -> Font { .system(size: size, weight: .regular, design: .monospaced) }
+    static func medium(_ size: CGFloat) -> Font { .system(size: size, weight: .medium, design: .monospaced) }
+    static func semibold(_ size: CGFloat) -> Font { .system(size: size, weight: .semibold, design: .monospaced) }
+    static func bold(_ size: CGFloat) -> Font { .system(size: size, weight: .bold, design: .monospaced) }
+}
+
+// MARK: - Main Panel
+
+struct ExpandedIslandView: View {
+    @ObservedObject private var registry = ModuleRegistry.shared
+    @ObservedObject private var theme = ThemeManager.shared
+    @Namespace private var tabNamespace
+    @State private var showSettings = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            mainContent
+                .id(registry.activeModuleIndex)
+                .transition(.opacity)
+            bottomTabBar
+        }
+    }
+
+    // MARK: Content
+
+    private var mainContent: some View {
+        Group {
+            switch registry.activeModule.id {
+            case "info":
+                InfoDashboardView()
+            case "clipboard":
+                ClipboardContentView()
+            case "keyvalue":
+                KeyValueContentView()
+            default:
+                registry.activeModule.expandedView.padding(12)
+            }
+        }
+    }
+
+    // MARK: Bottom Tab Bar
+
+    /// Unified accent color for the active tab pill — dark green matching the Info module.
+    private static let tabAccent = Color(red: 0.05, green: 0.45, blue: 0.25)
+
+    private var bottomTabBar: some View {
+        HStack(spacing: 1) {
+            ForEach(Array(registry.modules.enumerated()), id: \.offset) { i, m in
+                let active = i == registry.activeModuleIndex
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        registry.setActiveModule(at: i)
+                    }
+                }) {
+                    HStack(spacing: 3) {
+                        Image(systemName: m.tabIcon)
+                            .font(.system(size: 9, weight: .medium))
+                        if active {
+                            Text(m.displayName)
+                                .font(Mono.semibold(9))
+                                .transition(.opacity.combined(with: .scale(scale: 0.8)))
+                        }
+                    }
+                    .foregroundColor(active ? .white : theme.colors.textSecondary)
+                    .padding(.horizontal, active ? 12 : 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        Group {
+                            if active {
+                                Capsule()
+                                    .fill(Self.tabAccent)
+                                    .matchedGeometryEffect(id: "tabPill", in: tabNamespace)
+                            }
+                        }
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+
+            Spacer()
+
+            Button(action: { showSettings.toggle() }) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(theme.colors.gearForeground)
+                    .padding(3)
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showSettings, arrowEdge: .bottom) {
+                ThemePickerView()
+                    .environment(\.colorScheme, theme.colors.colorScheme)
+            }
+        }
+        .padding(.horizontal, 5)
+        .padding(.vertical, 3)
+        .background(
+            Capsule()
+                .fill(theme.colors.tabBarBackground)
+        )
+        .padding(.horizontal, 8)
+        .padding(.bottom, 4)
+    }
+}
+
+// MARK: - Info Dashboard
+
+struct InfoDashboardView: View {
+    var body: some View {
+        HStack(alignment: .top, spacing: 6) {
+            MusicCompactCard()
+                .frame(height: 118)
+            CalendarCompactCard()
+                .frame(height: 118)
+            WeatherCompactCard()
+                .frame(height: 118)
+        }
+        .padding(6)
+        .frame(height: 130)
+    }
+}
+
+// MARK: - Music Compact Card
+
+private struct MusicCompactCard: View {
+    @StateObject private var svc = MusicService()
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    )
+                )
+
+            Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
+                .font(.system(size: 30))
+                .foregroundColor(.white.opacity(0.5))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+            VStack(spacing: 2) {
+                Text(svc.musicInfo.title)
+                    .font(Mono.semibold(9))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                Text(svc.musicInfo.artist)
+                    .font(Mono.regular(8))
+                    .foregroundColor(.white.opacity(0.6))
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.black.opacity(0.5), Color.black.opacity(0.2), Color.clear],
+                    startPoint: .bottom, endPoint: .top
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear { svc.start() }
+    }
+}
+
+// MARK: - Calendar Compact Card
+
+private struct CalendarCompactCard: View {
+    @ObservedObject private var theme = ThemeManager.shared
+    @State private var now = Date()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private static let dayFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "E"; return f
+    }()
+    private static let dayNumFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "d"; return f
+    }()
+
+    /// Dark green matching the tab accent / Info module.
+    private static let todayColor = Color(red: 0.05, green: 0.45, blue: 0.25)
+
+    var body: some View {
+        VStack(spacing: 6) {
+            // Week strip — Mon–Sun, only today has the white underline
+            HStack(spacing: 2) {
+                ForEach(weekDates(), id: \.self) { date in
+                    let isToday = calendar.isDate(date, inSameDayAs: now)
+                    VStack(spacing: 2) {
+                        Text(Self.dayFormatter.string(from: date))
+                            .font(Mono.medium(8))
+                            .foregroundColor(isToday ? Self.todayColor : theme.colors.textSecondary)
+                        Text(Self.dayNumFormatter.string(from: date))
+                            .font(isToday ? Mono.bold(9) : Mono.regular(9))
+                            .foregroundColor(isToday ? Self.todayColor : theme.colors.text)
+
+                        // Underline — only for today
+                        RoundedRectangle(cornerRadius: 1)
+                            .fill(isToday ? Color.white : Color.clear)
+                            .frame(height: 2)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+
+            Spacer()
+
+            // Current time
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text({
+                    let f = DateFormatter(); f.dateFormat = "h:mm"; return f.string(from: now)
+                }())
+                    .font(Mono.bold(16))
+                Text({
+                    let f = DateFormatter(); f.dateFormat = "ss"; return f.string(from: now)
+                }())
+                    .font(Mono.medium(9))
+            }
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.purple, Color.blue, Color.cyan],
+                    startPoint: .leading, endPoint: .trailing
+                )
+            )
+
+            Text({
+                let f = DateFormatter(); f.dateFormat = "EEEE, MMMM d"; return f.string(from: now)
+            }())
+                .font(Mono.regular(7))
+                .foregroundColor(theme.colors.textMuted)
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(theme.colors.cardBackground)
+        .cornerRadius(10)
+        .onReceive(timer) { t in now = t }
+    }
+
+    private func weekDates() -> [Date] {
+        let cal = calendar
+        let weekday = cal.component(.weekday, from: now)
+        let offsetToMonday = (weekday + 5) % 7
+        let monday = cal.startOfDay(for: cal.date(byAdding: .day, value: -offsetToMonday, to: now)!)
+        return (0..<7).map { cal.date(byAdding: .day, value: $0, to: monday)! }
+    }
+
+    private var calendar: Calendar { Calendar.current }
+}
+
+// MARK: - Weather Compact Card
+
+private struct WeatherCompactCard: View {
+    @ObservedObject private var svc = WeatherService.shared
+    @ObservedObject private var theme = ThemeManager.shared
+
+    var body: some View {
+        VStack(spacing: 4) {
+            if let weather = svc.currentWeather {
+                Image(systemName: iconFor(code: weather.conditionCode))
+                    .font(.system(size: 24))
+                    .foregroundColor(iconColorFor(code: weather.conditionCode))
+
+                Text(weather.temperatureString)
+                    .font(Mono.bold(17))
+                    .foregroundColor(theme.colors.text)
+
+                Text(weather.location)
+                    .font(Mono.regular(8))
+                    .foregroundColor(theme.colors.textSecondary)
+            } else {
+                Image(systemName: "cloud.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(theme.colors.emptyIcon)
+                Text("--°C")
+                    .font(Mono.bold(17))
+                    .foregroundColor(theme.colors.emptyText)
+                Text("Loading...")
+                    .font(Mono.regular(8))
+                    .foregroundColor(theme.colors.emptyText)
+            }
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(theme.colors.cardBackground)
+        .cornerRadius(10)
+        .onAppear { svc.start() }
+    }
+
+    private func iconFor(code: Int) -> String {
+        switch code {
+        case 0, 1: return "sun.max.fill"
+        case 2: return "cloud.sun.fill"
+        case 3: return "cloud.fill"
+        case 45, 48: return "smoke.fill"
+        case 51...57: return "cloud.drizzle.fill"
+        case 61...67: return "cloud.rain.fill"
+        case 71...77: return "cloud.snow.fill"
+        case 80...82: return "cloud.heavyrain.fill"
+        case 85, 86: return "cloud.snow.fill"
+        case 95...99: return "cloud.bolt.rain.fill"
+        default: return "cloud.fill"
+        }
+    }
+
+    private func iconColorFor(code: Int) -> Color {
+        switch code {
+        case 0, 1: return .yellow
+        case 2: return .blue
+        case 3: return .gray
+        case 45, 48: return .gray
+        case 51...67: return .blue
+        case 71...77, 85, 86: return .cyan
+        case 80...82: return .blue
+        case 95...99: return .yellow
+        default: return .gray
+        }
+    }
+}
+
+// MARK: - Clipboard Content
+
+struct ClipboardContentView: View {
+    @ObservedObject private var svc = ClipboardService.shared
+    @ObservedObject private var theme = ThemeManager.shared
+    @State private var selectedID: UUID?
+    @FocusState private var isFocused: Bool
+
+    private func autoSelectFirst() {
+        if let first = svc.filteredItems.first, selectedID == nil || !svc.filteredItems.contains(where: { $0.id == selectedID }) {
+            selectedID = first.id
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Search field
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(theme.colors.textMuted)
+                TextField("Search clipboard...", text: $svc.searchTerm)
+                    .textFieldStyle(.plain)
+                    .font(Mono.regular(10))
+                    .foregroundColor(theme.colors.text)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(theme.colors.searchFieldBackground)
+            .cornerRadius(6)
+            .padding(.horizontal, 8)
+            .padding(.top, 8)
+
+            if svc.filteredItems.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "clipboard")
+                        .font(.system(size: 24))
+                        .foregroundColor(theme.colors.emptyIcon)
+                    Text(svc.searchTerm.isEmpty
+                         ? "Clipboard is empty"
+                         : "No items match \"\(svc.searchTerm)\"")
+                        .font(Mono.regular(10))
+                        .foregroundColor(theme.colors.emptyText)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 4) {
+                            ForEach(Array(svc.filteredItems.prefix(50).enumerated()), id: \.element.id) { idx, item in
+                                clipboardRow(item, isSelected: selectedID == item.id)
+                                    .id(item.id)
+                                    .onTapGesture {
+                                        selectedID = item.id
+                                        svc.copyToClipboard(item)
+                                    }
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                    }
+                    .background(theme.colors.cardBackground)
+                    .cornerRadius(8)
+                    .padding(.horizontal, 8)
+                    .focusable()
+                    .focused($isFocused)
+                    .focusEffectDisabled()
+                    .onMoveCommand { direction in
+                        moveSelection(direction, proxy: proxy)
+                    }
+                }
+            }
+        }
+        .frame(height: 260)
+        .onAppear {
+            autoSelectFirst()
+            isFocused = true
+        }
+        .onChange(of: svc.filteredItems.map(\.id)) { _ in autoSelectFirst() }
+    }
+
+    private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {
+        let items = Array(svc.filteredItems.prefix(50))
+        guard !items.isEmpty else { return }
+        let currentIdx = items.firstIndex(where: { $0.id == selectedID })
+        switch direction {
+        case .up:
+            let next = currentIdx.map { max($0 - 1, 0) } ?? 0
+            selectedID = items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        case .down:
+            let next = currentIdx.map { min($0 + 1, items.count - 1) } ?? 0
+            selectedID = items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        default:
+            break
+        }
+    }
+
+    @ViewBuilder
+    private func clipboardRow(_ item: ClipboardItem, isSelected: Bool) -> some View {
+        let highlight = isSelected ? theme.colors.snippetRowHover : theme.colors.snippetRow
+        switch item.content {
+        case .text(let text):
+            Text(text)
+                .font(Mono.regular(10))
+                .foregroundColor(theme.colors.text)
+                .lineLimit(2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(highlight)
+                .cornerRadius(4)
+                .contentShape(Rectangle())
+
+        case .image(let data):
+            HStack {
+                if let nsImage = NSImage(data: data) {
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 60)
+                        .cornerRadius(4)
+                }
+                Text("Image — \(ByteCountFormatter.string(fromByteCount: Int64(data.count), countStyle: .file))")
+                    .font(Mono.regular(9))
+                    .foregroundColor(theme.colors.textMuted)
+                Spacer()
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(highlight)
+            .cornerRadius(4)
+            .contentShape(Rectangle())
+        }
+    }
+}
+
+// MARK: - Theme Picker
+
+private struct ThemePickerView: View {
+    @ObservedObject private var themeManager = ThemeManager.shared
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Text("Appearance")
+                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .foregroundColor(themeManager.colors.textSecondary)
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+                .padding(.bottom, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            ForEach(AppTheme.allCases, id: \.self) { theme in
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        themeManager.theme = theme
+                    }
+                }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: theme.iconName)
+                            .font(.system(size: 13))
+                            .frame(width: 22)
+                            .foregroundColor(themeManager.theme == theme ? .accentColor : themeManager.colors.textSecondary)
+
+                        Text(theme.displayName)
+                            .font(.system(size: 12, design: .monospaced))
+                            .foregroundColor(themeManager.colors.text)
+
+                        Spacer()
+
+                        if themeManager.theme == theme {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(width: 160)
+        .padding(.bottom, 8)
+    }
+}
