@@ -8,6 +8,23 @@ final class FloatingPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 }
 
+/// Custom status bar view that shows a menu on any mouse click.
+final class StatusBarView: NSView {
+    var onClick: (() -> NSMenu?)?
+
+    override func mouseDown(with event: NSEvent) {
+        if let menu = onClick?() {
+            NSMenu.popUpContextMenu(menu, with: event, for: self)
+        }
+    }
+
+    override func rightMouseDown(with event: NSEvent) {
+        if let menu = onClick?() {
+            NSMenu.popUpContextMenu(menu, with: event, for: self)
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var panel: FloatingPanel?
@@ -30,10 +47,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.statusItem = item
         if let button = item.button {
             button.title = "⎈"
-            button.target = self
-            button.action = #selector(togglePanel)
-            button.sendAction(on: [.leftMouseDown])
         }
+        let menu = NSMenu()
+        let toggleItem = NSMenuItem(title: "显示/隐藏", action: #selector(togglePanel), keyEquivalent: "")
+        toggleItem.target = self
+        menu.addItem(toggleItem)
+        menu.addItem(NSMenuItem.separator())
+        let quitItem = NSMenuItem(title: "退出", action: #selector(quitApp), keyEquivalent: "q")
+        quitItem.target = self
+        menu.addItem(quitItem)
+        item.menu = menu
 
         setupGlobalHotkey()
         setupArrowKeyMonitor()
@@ -72,6 +95,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         showPanel()
+    }
+
+    @objc private func quitApp() {
+        NSApplication.shared.terminate(nil)
     }
 
     private func showPanel() {

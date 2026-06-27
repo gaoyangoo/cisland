@@ -19,7 +19,6 @@
 		2E0D50FF5413A208F5C4C8BB /* HotkeyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B026F3ABA8A4145CCDE63E0A /* HotkeyModule.swift */; };
 		32786731840203BAA2B6B423 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFC75E4D648E772B42745B3 /* Notifications.swift */; };
 		364A6F4D7F85C4B80BC53644 /* IslandShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5853A626F8B9D66007D230 /* IslandShape.swift */; };
-		4C94A40E7000A2B29D975C30 /* DynamicIslandApp.swift.bak in Resources */ = {isa = PBXBuildFile; fileRef = 047EE05AF953CAB21840C0A3 /* DynamicIslandApp.swift.bak */; };
 		564437C0669764665BC7A9B7 /* CalendarData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FDC8B94649EA2E7790B26 /* CalendarData.swift */; };
 		5EFCC94C857758E68B2F6334 /* ClipboardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD96109E9B17F1670635A33 /* ClipboardModule.swift */; };
 		60B2CFA3B15A6E55A2E32E93 /* InfoModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F73AF2CB12C8EDB1B90C8A /* InfoModule.swift */; };
@@ -47,7 +46,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		047EE05AF953CAB21840C0A3 /* DynamicIslandApp.swift.bak */ = {isa = PBXFileReference; path = DynamicIslandApp.swift.bak; sourceTree = "<group>"; };
 		06F73AF2CB12C8EDB1B90C8A /* InfoModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoModule.swift; sourceTree = "<group>"; };
 		19FEBF4F55B90C99DD7847FC /* WeatherCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCard.swift; sourceTree = "<group>"; };
 		2E0FDC8B94649EA2E7790B26 /* CalendarData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarData.swift; sourceTree = "<group>"; };
@@ -155,7 +153,6 @@
 			children = (
 				A3D8694A87621EA481DAEF2A /* AppDelegate.swift */,
 				D894B359E49F814FB457C71D /* cislandApp.swift */,
-				047EE05AF953CAB21840C0A3 /* DynamicIslandApp.swift.bak */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -304,7 +301,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C94A40E7000A2B29D975C30 /* DynamicIslandApp.swift.bak in Resources */,
 				0679B47B82A43CF7949C9BCD /* hooks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +430,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.claus.cisland;
 				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -455,6 +452,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.claus.cisland;
 				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = 1;
