@@ -134,6 +134,9 @@ struct KeyValueContentView: View {
                     .onReceive(NotificationCenter.default.publisher(for: .snippetMoveDown)) { _ in
                         moveSelection(.down, proxy: proxy)
                     }
+                    .onReceive(NotificationCenter.default.publisher(for: .snippetEnter)) { _ in
+                        handleEnter()
+                    }
                 }
             }
         }
@@ -163,6 +166,12 @@ struct KeyValueContentView: View {
         default:
             break
         }
+    }
+
+    private func handleEnter() {
+        guard let id = selectedID,
+              let item = store.items.first(where: { $0.id == id }) else { return }
+        copy(item)
     }
 
     private func copy(_ item: KeyValueItem) {

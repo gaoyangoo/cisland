@@ -142,6 +142,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     NotificationCenter.default.post(name: .clipboardEnter, object: nil)
                     return nil
                 }
+                if registry.activeModule.id == "keyvalue" {
+                    NotificationCenter.default.post(name: .snippetEnter, object: nil)
+                    return nil
+                }
                 return event
             case 125: // down
                 if registry.activeModule.id == "clipboard" {

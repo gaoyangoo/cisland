@@ -118,8 +118,10 @@ struct InfoDashboardView: View {
                 .frame(maxWidth: 95)
                 .frame(height: 135)
         }
-        .padding(8)
-        .frame(height: 151)
+        .padding(.horizontal, 8)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+        .frame(height: 149)
     }
 }
 
@@ -188,9 +190,11 @@ private struct CalendarCompactCard: View {
         let f = DateFormatter(); f.dateFormat = "d"; return f
     }()
 
-    private static let monthFormatter: DateFormatter = {
+    private static let enMonthFormatter: DateFormatter = {
         let f = DateFormatter(); f.dateFormat = "MMMM"; return f
     }()
+    private static let cnMonths = ["一月","二月","三月","四月","五月","六月",
+                                    "七月","八月","九月","十月","十一月","十二月"]
     private static let lunarCalendar = Calendar(identifier: .chinese)
     private static let lunarFormatter: DateFormatter = {
         let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none
@@ -204,7 +208,7 @@ private struct CalendarCompactCard: View {
     var body: some View {
         VStack(spacing: 2) {
             // Month at top
-            Text(Self.monthFormatter.string(from: now).uppercased())
+            Text(monthLabel())
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(theme.colors.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -271,6 +275,13 @@ private struct CalendarCompactCard: View {
         .background(theme.colors.cardBackground)
         .cornerRadius(10)
         .onReceive(timer) { t in now = t }
+    }
+
+    private func monthLabel() -> String {
+        let en = Self.enMonthFormatter.string(from: now)
+        let m = calendar.component(.month, from: now)
+        let cn = Self.cnMonths[min(m - 1, 11)]
+        return "\(en) · \(cn)"
     }
 
     private func lunarDateString() -> String {

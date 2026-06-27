@@ -36,6 +36,9 @@ public extension Notification.Name {
     /// Clipboard — Enter key pressed on selected item
     static let clipboardEnter = Notification.Name("clipboardEnter")
 
+    /// Snippet — Enter key pressed on selected item
+    static let snippetEnter = Notification.Name("snippetEnter")
+
     /// Request the floating panel to close
     static let togglePanel = Notification.Name("togglePanel")
 }
