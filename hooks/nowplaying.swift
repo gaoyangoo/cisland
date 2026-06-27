@@ -25,15 +25,9 @@ let u = info["kMRMediaRemoteNowPlayingInfoDuration"] as? Double ?? 0
 let p = info["kMRMediaRemoteNowPlayingInfoElapsedTime"] as? Double ?? 0
 let q = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double ?? 0
 
-// Artwork — some apps/macOS provide it as raw data (try both Data and NSData)
 var artBase64 = ""
-let artKey = "kMRMediaRemoteNowPlayingInfoArtworkData"
-if let artData = info[artKey] as? Data {
+if let artData = info["kMRMediaRemoteNowPlayingInfoArtworkData"] as? Data {
     artBase64 = artData.base64EncodedString()
-} else if let artNSData = info[artKey] as? NSData {
-    artBase64 = (artNSData as Data).base64EncodedString()
-} else if let artObj = (info as NSObject).value(forKey: artKey) as? NSData {
-    artBase64 = (artObj as Data).base64EncodedString()
 }
 
 var o: [String: Any] = [

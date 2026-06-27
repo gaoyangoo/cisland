@@ -63,7 +63,7 @@ private func runNowPlayingScript() -> String? {
 }
 
 private func helperScriptPath() -> String {
-    return Bundle.main.bundlePath + "/Contents/Resources/nowplaying.swift"
+    return Bundle.main.bundlePath + "/Contents/Resources/hooks/nowplaying.swift"
 }
 
 // MARK: - Model

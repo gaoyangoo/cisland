@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var themeObserver: AnyCancellable?
 
     /// Fixed panel height — tall enough for all tabs (Clipboard=290)
-    private static let panelHeight: CGFloat = 290
+    private static let panelHeight: CGFloat = 303
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSApp.setActivationPolicy(.accessory)

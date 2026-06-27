@@ -64,7 +64,7 @@ struct ExpandedIslandView: View {
                                 .transition(.opacity.combined(with: .scale(scale: 0.8)))
                         }
                     }
-                    .foregroundColor(active ? .white : theme.colors.textSecondary)
+                    .foregroundColor(active ? .white : m.accentColor)
                     .padding(.horizontal, active ? 12 : 8)
                     .padding(.vertical, 4)
                     .background(
@@ -85,7 +85,7 @@ struct ExpandedIslandView: View {
             Button(action: { showSettings.toggle() }) {
                 Image(systemName: "gearshape")
                     .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(theme.colors.gearForeground)
+                    .foregroundColor(.orange)
                     .padding(3)
             }
             .buttonStyle(.plain)
@@ -101,7 +101,7 @@ struct ExpandedIslandView: View {
                 .fill(theme.colors.tabBarBackground)
         )
         .padding(.horizontal, 8)
-        .padding(.bottom, 4)
+        .padding(.bottom, 6)
     }
 }
 
@@ -111,15 +111,15 @@ struct InfoDashboardView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 6) {
             MusicCompactCard()
-                .frame(width: 118, height: 118)
+                .frame(width: 140, height: 135)
             CalendarCompactCard()
-                .frame(height: 118)
+                .frame(height: 135)
             WeatherCompactCard()
-                .frame(maxWidth: 90)
-                .frame(height: 118)
+                .frame(maxWidth: 95)
+                .frame(height: 135)
         }
-        .padding(6)
-        .frame(height: 130)
+        .padding(8)
+        .frame(height: 151)
     }
 }
 
@@ -127,50 +127,49 @@ struct InfoDashboardView: View {
 
 private struct MusicCompactCard: View {
     @ObservedObject private var svc = MusicService.shared
+    @ObservedObject private var theme = ThemeManager.shared
 
     var body: some View {
-        ZStack(alignment: .bottom) {
+        VStack {
+            Spacer()
+            // Text overlay at bottom
+            VStack(spacing: 2) {
+                Text(svc.musicInfo.title)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.6), radius: 2, x: 0, y: 1)
+                    .lineLimit(1)
+                Text(svc.musicInfo.artist)
+                    .font(.system(size: 9, weight: .regular))
+                    .foregroundColor(.white.opacity(0.7))
+                    .shadow(color: .black.opacity(0.5), radius: 2, x: 0, y: 1)
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.black.opacity(0.6), Color.black.opacity(0.2), Color.clear],
+                    startPoint: .bottom, endPoint: .top
+                )
+            )
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
             if let art = svc.artwork {
                 Image(nsImage: art)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        )
-                    )
-            }
-
-            Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
-                .font(.system(size: 30))
-                .foregroundColor(.white.opacity(0.5))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-
-            VStack(spacing: 2) {
-                Text(svc.musicInfo.title)
-                    .font(.system(size: 9, weight: .semibold))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-                Text(svc.musicInfo.artist)
-                    .font(.system(size: 8, weight: .regular))
-                    .foregroundColor(.white.opacity(0.6))
-                    .lineLimit(1)
-            }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 5)
-            .frame(maxWidth: .infinity)
-            .background(
                 LinearGradient(
-                    colors: [Color.black.opacity(0.6), Color.black.opacity(0.3), Color.clear],
-                    startPoint: .bottom, endPoint: .top
+                    colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
                 )
-            )
+            }
         }
+        .background(theme.colors.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear { svc.start() }
     }
 }
@@ -414,10 +413,11 @@ struct ClipboardContentView: View {
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 4) {
+                        LazyVStack(spacing: 1) {
                             ForEach(Array(svc.filteredItems.prefix(50).enumerated()), id: \.element.id) { idx, item in
                                 clipboardRow(item, isSelected: selectedID == item.id)
                                     .id(item.id)
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
                                         selectedID = item.id
                                         svc.copyToClipboard(item)
@@ -425,7 +425,7 @@ struct ClipboardContentView: View {
                             }
                         }
                         .padding(.horizontal, 8)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 3)
                     }
                     .onReceive(NotificationCenter.default.publisher(for: .clipboardMoveUp)) { _ in
                         moveSelection(.up, proxy: proxy)
@@ -483,10 +483,9 @@ struct ClipboardContentView: View {
                 .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)
-                .frame(height: 28)
+                .frame(height: 24)
                 .background(isSelected ? Color.accentColor.opacity(0.3) : Color.clear)
                 .cornerRadius(4)
-                .contentShape(Rectangle())
 
         case .image(let data):
             HStack(spacing: 8) {
@@ -508,7 +507,6 @@ struct ClipboardContentView: View {
             .frame(height: isSelected ? 88 : 44)
             .background(isSelected ? Color.accentColor.opacity(0.3) : Color.clear)
             .cornerRadius(4)
-            .contentShape(Rectangle())
         }
     }
 }

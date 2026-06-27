@@ -14,7 +14,7 @@ public struct IslandContainerView: View {
                 IslandShape()
                     .fill(themeManager.theme == .light
                           ? AnyShapeStyle(Color.white.opacity(0.96))
-                          : AnyShapeStyle(Color.black))
+                          : AnyShapeStyle(Color(white: 0.08)))
             )
             .environment(\.colorScheme, themeManager.colors.colorScheme)
     }
