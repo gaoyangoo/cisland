@@ -1,7 +1,0 @@
-name: test
-targets:
-  test:
-    type: application
-    platform: darwin
-    sources:
-      - cisland

@@ -171,6 +171,16 @@ cisland/
 
 No API keys or external accounts required.
 
+## 📦 Download
+
+Latest release: **[Cisland-1.0.0.dmg](./download/Cisland-1.0.0.dmg)**
+
+See [RELEASES.md](./RELEASES.md) for full changelog and download links.
+
+## 📄 Versioning
+
+See [VERSION.md](./VERSION.md) for semantic versioning policy.
+
 ## 📄 License
 
 MIT License — see [LICENSE](./LICENSE) for details.
