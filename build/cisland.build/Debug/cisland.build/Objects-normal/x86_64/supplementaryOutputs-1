@@ -1,0 +1,37 @@
+{
+  "/Users/claus/code/claude_code/island/cisland/App/AppDelegate.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/AppDelegate.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/AppDelegate.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/AppDelegate.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/AppDelegate.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/AppDelegate.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Models/ClipboardItem.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/ClipboardItem.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/ClipboardItem.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/ClipboardItem.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/ClipboardItem.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/ClipboardItem.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Models/CalendarData.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarData.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarData.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarData.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarData.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarData.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/CalendarCard.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarCard.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarCard.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarCard.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarCard.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarCard.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/CalendarService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarService.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/CalendarService.swiftdeps"
+  }
+}

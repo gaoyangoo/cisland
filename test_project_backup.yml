@@ -1,0 +1,9 @@
+name: cisland
+options:
+  bundleIdPrefix: com.claus.island
+targets:
+  cisland:
+    type: application
+    platform: macos
+    sources:
+      - cisland

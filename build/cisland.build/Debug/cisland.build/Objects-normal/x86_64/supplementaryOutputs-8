@@ -1,0 +1,30 @@
+{
+  "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/WindowModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowModule.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowModule.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Windows/WindowUtils.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowUtils.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowUtils.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowUtils.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowUtils.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/WindowUtils.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/cislandApp.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/cislandApp.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/cislandApp.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/cislandApp.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/cislandApp.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/x86_64/cislandApp.swiftdeps"
+  }
+}

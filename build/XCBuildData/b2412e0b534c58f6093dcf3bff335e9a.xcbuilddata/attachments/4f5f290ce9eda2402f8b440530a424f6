@@ -1,0 +1,389 @@
+{
+  "" : {
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cisland-primary.dia",
+    "emit-module-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cisland-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cisland-primary-emit-module.dia",
+    "pch" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cisland-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cisland-primary.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/App/AppDelegate.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/AppDelegate~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/App/DynamicIslandApp.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DynamicIslandApp~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/ContentView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Core/Hotkey.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Hotkey~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Core/IslandModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Core/ModuleRegistry.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Core/Notifications.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Models/ClipboardItem.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardItem~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Models/IslandSize.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandSize~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/ClipboardModule/ClipboardModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/ClipboardModule/Views/ClipboardRow.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardRow~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/ClipboardModule/Views/ClipboardSearchField.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardSearchField~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/ClipboardModule/Views/ClipboardView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/HotkeyModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/HotkeyModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/InfoModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/InfoModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Models/CalendarData.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarData~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/CalendarCard.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarCard~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/DashboardView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/DashboardView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/MusicCard.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/WeatherCard.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherCard~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/StatusBarModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/StatusBarModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/WindowModule.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowModule~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/CalendarService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CalendarService~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/ClipboardService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ClipboardService~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/MusicService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/WeatherService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WeatherService~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/CompactView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/CompactView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/ExpandedIslandView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ExpandedIslandView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/IslandBackgroundStyle.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandBackgroundStyle~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/IslandContainerView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandContainerView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/IslandShape.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandShape~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/ModuleIcon.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/TabBarView.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/TabBarView~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Windows/IslandPanel.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandPanel~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Windows/IslandWindowController.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/IslandWindowController~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Windows/WindowUtils.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/WindowUtils~partial.swiftmodule"
+  },
+  "/Users/claus/code/claude_code/island/cisland/cislandApp.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.dia",
+    "index-unit-output-path" : "/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.o",
+    "llvm-bc" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.bc",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp.swiftdeps",
+    "swiftmodule" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/cislandApp~partial.swiftmodule"
+  }
+}

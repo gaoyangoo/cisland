@@ -1,0 +1,37 @@
+{
+  "/Users/claus/code/claude_code/island/cisland/Core/ModuleRegistry.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleRegistry.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Core/Notifications.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/Notifications.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Modules/InfoModule/Views/MusicCard.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicCard.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Services/MusicService.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/MusicService.swiftdeps"
+  },
+  "/Users/claus/code/claude_code/island/cisland/Views/ModuleIcon.swift" : {
+    "const-values" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.swiftconstvalues",
+    "dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.d",
+    "diagnostics" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.dia",
+    "object" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.o",
+    "swift-dependencies" : "/Users/claus/code/claude_code/island/build/cisland.build/Debug/cisland.build/Objects-normal/arm64/ModuleIcon.swiftdeps"
+  }
+}
