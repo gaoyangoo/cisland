@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MusicCard: View {
-    @StateObject private var musicService = MusicService()
+    @ObservedObject private var musicService = MusicService.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

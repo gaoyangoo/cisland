@@ -2,101 +2,84 @@ import Foundation
 import SwiftUI
 
 class MusicService: ObservableObject {
-    @Published var musicInfo: MusicInfo
-    @Published var isLoading: Bool = false
+    static let shared = MusicService()
 
-    private let scriptPath: String
+    @Published var musicInfo = MusicInfo(title: "No track playing")
+    @Published var artwork: NSImage?
+    @Published var isLoading = false
+
     private var timer: Timer?
+    private var fetchTask: Process?
 
-    init(scriptPath: String = "/Users/claus/code/claude_code/island/cisland/cisland/hooks/nowplaying.swift") {
-        self.scriptPath = scriptPath
-        self.musicInfo = MusicInfo(artist: "Unknown", album: "Unknown", title: "No track playing", duration: 0, position: 0, state: "stopped")
-    }
+    private init() {}
 
     func start() {
-        fetchMusicInfo()
-        timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
-            self?.fetchMusicInfo()
+        guard timer == nil else { return }
+        fetch()
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+            self?.fetch()
         }
     }
 
-    func stop() {
-        timer?.invalidate()
-        timer = nil
-    }
+    func stop() { timer?.invalidate(); timer = nil }
+    deinit { stop() }
 
-    deinit {
-        stop()
-    }
-
-    private func fetchMusicInfo() {
-        isLoading = true
-
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-
-            let scriptCommand = """
-            do shell script "\(self.scriptPath)"
-            """
-
-            process.arguments = ["-e", scriptCommand]
-
-            let pipe = Pipe()
-            process.standardOutput = pipe
-            process.standardError = pipe
-
-            do {
-                try process.run()
-                process.waitUntilExit()
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                if let output = String(data: data, encoding: .utf8) {
-                    DispatchQueue.main.async {
-                        self.parseMusicInfo(output)
-                        self.isLoading = false
-                    }
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.musicInfo = MusicInfo(artist: "Unknown", album: "Unknown", title: "Error fetching music info", duration: 0, position: 0, state: "stopped")
-                    self.isLoading = false
+    private func fetch() {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self else { return }
+            guard let json = runNowPlayingScript(),
+                  let d = json.data(using: .utf8),
+                  let info = try? JSONDecoder().decode(MusicInfo.self, from: d) else { return }
+            DispatchQueue.main.async {
+                self.musicInfo = info
+                if !info.artwork.isEmpty,
+                   let d = Data(base64Encoded: info.artwork),
+                   let img = NSImage(data: d) {
+                    self.artwork = img
                 }
             }
-        }
-    }
-
-    private func parseMusicInfo(_ jsonString: String) {
-        let decoder = JSONDecoder()
-        do {
-            // Clean up JSON string
-            let cleaned = jsonString.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let data = cleaned.data(using: .utf8) {
-                let musicInfo = try decoder.decode(MusicInfo.self, from: data)
-                self.musicInfo = musicInfo
-            }
-        } catch {
-            // Keep current info on error
-            print("Error parsing music info: \(error)")
         }
     }
 }
 
+// MARK: - Helper script (run via /usr/bin/swift — Apple binary with entitlements)
+
+private func runNowPlayingScript() -> String? {
+    let src = helperScriptPath()
+    guard FileManager.default.fileExists(atPath: src) else { return nil }
+
+    let task = Process()
+    task.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
+    task.arguments = [src]
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    task.standardError = FileHandle.nullDevice
+    do {
+        try task.run()
+        task.waitUntilExit()
+        return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    } catch { return nil }
+}
+
+private func helperScriptPath() -> String {
+    return Bundle.main.bundlePath + "/Contents/Resources/nowplaying.swift"
+}
+
+// MARK: - Model
+
 struct MusicInfo: Codable, Hashable {
-    let artist: String
-    let album: String
-    let title: String
-    let duration: Double
-    let position: Double
-    let state: String
+    var artist = ""
+    var album = ""
+    var title = "No track playing"
+    var duration = 0.0
+    var position = 0.0
+    var state = "stopped"
+    var artwork = ""
 
     var progress: Double {
         guard duration > 0 else { return 0 }
         return min(max(position / duration, 0), 1)
     }
-
-    var isPlaying: Bool {
-        return state == "playing"
-    }
+    var isPlaying: Bool { state == "playing" }
 }

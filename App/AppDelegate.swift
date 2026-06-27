@@ -38,6 +38,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupGlobalHotkey()
         setupArrowKeyMonitor()
         observeTheme()
+
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(handleTogglePanel),
+            name: .togglePanel, object: nil
+        )
+    }
+
+    @objc private func handleTogglePanel() {
+        DispatchQueue.main.async { [weak self] in
+            self?.panel?.orderOut(nil)
+        }
     }
 
     // MARK: - Theme
@@ -64,7 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func showPanel() {
-        let width: CGFloat = 480
+        let width: CGFloat = 520
 
         if panel == nil {
             let p = FloatingPanel(
@@ -118,14 +129,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let registry = ModuleRegistry.shared
             let count = registry.modules.count
             switch event.keyCode {
-            case 123:
+            case 123: // left
                 let prev = (registry.activeModuleIndex - 1 + count) % count
                 registry.setActiveModule(at: prev)
                 return nil
-            case 124:
+            case 124: // right
                 let next = (registry.activeModuleIndex + 1) % count
                 registry.setActiveModule(at: next)
                 return nil
+            case 36: // enter
+                if registry.activeModule.id == "clipboard" {
+                    NotificationCenter.default.post(name: .clipboardEnter, object: nil)
+                    return nil
+                }
+                return event
+            case 125: // down
+                if registry.activeModule.id == "clipboard" {
+                    NotificationCenter.default.post(name: .clipboardMoveDown, object: nil)
+                    return nil
+                }
+                if registry.activeModule.id == "keyvalue" {
+                    NotificationCenter.default.post(name: .snippetMoveDown, object: nil)
+                    return nil
+                }
+                return event
+            case 126: // up
+                if registry.activeModule.id == "clipboard" {
+                    NotificationCenter.default.post(name: .clipboardMoveUp, object: nil)
+                    return nil
+                }
+                if registry.activeModule.id == "keyvalue" {
+                    NotificationCenter.default.post(name: .snippetMoveUp, object: nil)
+                    return nil
+                }
+                return event
             default:
                 return event
             }

@@ -13,6 +13,9 @@ targets:
       - Services
       - Views
       - Windows
+      - path: hooks
+        type: file
+        buildPhase: resources
     info:
       path: Info.plist
       properties:
@@ -26,6 +29,7 @@ targets:
         LSBackgroundOnly: true
     settings:
       CODE_SIGN_IDENTITY: "-"
+      COPY_PHASE_STRIP: "NO"
       CODE_SIGN_STYLE: Automatic
       DEVELOPMENT_TEAM: ""
       ENABLE_HARDENED_RUNTIME: false

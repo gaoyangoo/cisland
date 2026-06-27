@@ -20,4 +20,22 @@ public extension Notification.Name {
 
     /// Notification when a module content updates
     static let moduleContentUpdated = Notification.Name("moduleContentUpdated")
+
+    /// Clipboard list — move selection up
+    static let clipboardMoveUp = Notification.Name("clipboardMoveUp")
+
+    /// Clipboard list — move selection down
+    static let clipboardMoveDown = Notification.Name("clipboardMoveDown")
+
+    /// Snippet list — move selection up
+    static let snippetMoveUp = Notification.Name("snippetMoveUp")
+
+    /// Snippet list — move selection down
+    static let snippetMoveDown = Notification.Name("snippetMoveDown")
+
+    /// Clipboard — Enter key pressed on selected item
+    static let clipboardEnter = Notification.Name("clipboardEnter")
+
+    /// Request the floating panel to close
+    static let togglePanel = Notification.Name("togglePanel")
 }

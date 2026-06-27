@@ -44,6 +44,7 @@ struct KeyValueContentView: View {
     @State private var newKey: String = ""
     @State private var newValue: String = ""
     @State private var copiedID: UUID?
+    @State private var selectedID: UUID?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -88,24 +89,59 @@ struct KeyValueContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 4) {
-                        ForEach($store.items) { $item in
-                            EditableSnippetRow(
-                                item: $item,
-                                copiedID: $copiedID,
-                                onDelete: { delete(item) },
-                                onCopy: { copy(item) },
-                                onUpdate: { store.updateItem(id: item.id, key: item.key, value: item.value) }
-                            )
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 4) {
+                            ForEach($store.items) { $item in
+                                EditableSnippetRow(
+                                    item: $item,
+                                    copiedID: $copiedID,
+                                    isSelected: selectedID == item.id,
+                                    onDelete: { delete(item) },
+                                    onCopy: { copy(item) },
+                                    onUpdate: { store.updateItem(id: item.id, key: item.key, value: item.value) }
+                                )
+                                .id(item.id)
+                            }
                         }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
+                    .onReceive(NotificationCenter.default.publisher(for: .snippetMoveUp)) { _ in
+                        moveSelection(.up, proxy: proxy)
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .snippetMoveDown)) { _ in
+                        moveSelection(.down, proxy: proxy)
+                    }
                 }
             }
         }
         .frame(height: 260)
+        .onAppear { autoSelectFirst() }
+        .onChange(of: store.items.map(\.id)) { _ in autoSelectFirst() }
+    }
+
+    private func autoSelectFirst() {
+        if let first = store.items.first, selectedID == nil || !store.items.contains(where: { $0.id == selectedID }) {
+            selectedID = first.id
+        }
+    }
+
+    private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {
+        guard !store.items.isEmpty else { return }
+        let currentIdx = store.items.firstIndex(where: { $0.id == selectedID })
+        switch direction {
+        case .up:
+            let next = currentIdx.map { max($0 - 1, 0) } ?? 0
+            selectedID = store.items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        case .down:
+            let next = currentIdx.map { min($0 + 1, store.items.count - 1) } ?? 0
+            selectedID = store.items[next].id
+            proxy.scrollTo(selectedID, anchor: .center)
+        default:
+            break
+        }
     }
 
     private func addItem() {
@@ -139,6 +175,7 @@ private struct EditableSnippetRow: View {
     @ObservedObject private var theme = ThemeManager.shared
     @Binding var item: KeyValueItem
     @Binding var copiedID: UUID?
+    let isSelected: Bool
     let onDelete: () -> Void
     let onCopy: () -> Void
     let onUpdate: () -> Void
@@ -208,7 +245,9 @@ private struct EditableSnippetRow: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(isEditing ? theme.colors.snippetRowEditing : theme.colors.snippetRow)
+        .background(isEditing ? theme.colors.snippetRowEditing
+                    : isSelected ? theme.colors.snippetRowHover
+                    : theme.colors.snippetRow)
         .cornerRadius(8)
         .contentShape(Rectangle())
         .onTapGesture(count: 1) {

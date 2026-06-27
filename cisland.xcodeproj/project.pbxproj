@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0679B47B82A43CF7949C9BCD /* hooks in Resources */ = {isa = PBXBuildFile; fileRef = 86616C6D9DADCB53754DCCF2 /* hooks */; };
 		0804F35F4E09BEAF7C4FC313 /* KeyValueModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94390AB52D552EDEB7EDFBB3 /* KeyValueModule.swift */; };
 		154A55BCAD9787865706DE75 /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8467EB85AFA92C097C2AB94E /* ClipboardService.swift */; };
 		1B129FC68DF98A48F25CFE4C /* ClipboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B499427E274E42F5630A27C7 /* ClipboardRow.swift */; };
@@ -66,6 +67,7 @@
 		7E51A62BE86A08A3E7CFB7C1 /* IslandBackgroundStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandBackgroundStyle.swift; sourceTree = "<group>"; };
 		7E99C439DE4A5900B6A74451 /* ClipboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardView.swift; sourceTree = "<group>"; };
 		8467EB85AFA92C097C2AB94E /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
+		86616C6D9DADCB53754DCCF2 /* hooks */ = {isa = PBXFileReference; path = hooks; sourceTree = "<group>"; };
 		94390AB52D552EDEB7EDFBB3 /* KeyValueModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueModule.swift; sourceTree = "<group>"; };
 		A1256074822F5FD14259A393 /* cisland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cisland.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3D8694A87621EA481DAEF2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		3EF9F0A1C97CFB41C2FC4FD6 = {
 			isa = PBXGroup;
 			children = (
+				86616C6D9DADCB53754DCCF2 /* hooks */,
 				8C5CF4545C3CFA898C4FF322 /* App */,
 				B016A52201D6714D3FA05DB5 /* Core */,
 				ECC203299BC3D3C8CEFCCBFC /* Models */,
@@ -302,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C94A40E7000A2B29D975C30 /* DynamicIslandApp.swift.bak in Resources */,
+				0679B47B82A43CF7949C9BCD /* hooks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,6 +426,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -442,6 +447,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
 				INFOPLIST_FILE = Info.plist;

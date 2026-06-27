@@ -5,7 +5,7 @@ import SwiftUI
 /// Overall width 480 pt; ears are 18 pt each side.
 struct IslandShape: Shape {
     let cornerRadius: CGFloat = 22
-    let earWidth: CGFloat = 18
+    let earWidth: CGFloat = 8
     let earHeight: CGFloat = 36
 
     func path(in rect: CGRect) -> Path {

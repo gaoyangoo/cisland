@@ -20,7 +20,6 @@ struct ExpandedIslandView: View {
         VStack(spacing: 0) {
             mainContent
                 .id(registry.activeModuleIndex)
-                .transition(.opacity)
             bottomTabBar
         }
     }
@@ -116,6 +115,7 @@ struct InfoDashboardView: View {
             CalendarCompactCard()
                 .frame(height: 118)
             WeatherCompactCard()
+                .frame(maxWidth: 90)
                 .frame(height: 118)
         }
         .padding(6)
@@ -126,17 +126,23 @@ struct InfoDashboardView: View {
 // MARK: - Music Compact Card
 
 private struct MusicCompactCard: View {
-    @StateObject private var svc = MusicService()
+    @ObservedObject private var svc = MusicService.shared
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(
-                    LinearGradient(
-                        colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
+            if let art = svc.artwork {
+                Image(nsImage: art)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.pink.opacity(0.5), Color.purple.opacity(0.4)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        )
                     )
-                )
+            }
 
             Image(systemName: svc.musicInfo.isPlaying ? "music.note" : "play.circle")
                 .font(.system(size: 30))
@@ -158,12 +164,12 @@ private struct MusicCompactCard: View {
             .frame(maxWidth: .infinity)
             .background(
                 LinearGradient(
-                    colors: [Color.black.opacity(0.5), Color.black.opacity(0.2), Color.clear],
+                    colors: [Color.black.opacity(0.6), Color.black.opacity(0.3), Color.clear],
                     startPoint: .bottom, endPoint: .top
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear { svc.start() }
     }
@@ -195,17 +201,23 @@ private struct CalendarCompactCard: View {
                     VStack(spacing: 2) {
                         Text(Self.dayFormatter.string(from: date))
                             .font(Mono.medium(8))
-                            .foregroundColor(isToday ? Self.todayColor : theme.colors.textSecondary)
+                            .foregroundColor(isToday ? .white : theme.colors.textSecondary)
                         Text(Self.dayNumFormatter.string(from: date))
                             .font(isToday ? Mono.bold(9) : Mono.regular(9))
-                            .foregroundColor(isToday ? Self.todayColor : theme.colors.text)
+                            .foregroundColor(isToday ? .white : theme.colors.text)
 
                         // Underline — only for today
                         RoundedRectangle(cornerRadius: 1)
-                            .fill(isToday ? Color.white : Color.clear)
+                            .fill(isToday ? .white : Color.clear)
                             .frame(height: 2)
                     }
                     .frame(maxWidth: .infinity)
+                    .padding(.vertical, 3)
+                    .background(
+                        isToday
+                        ? RoundedRectangle(cornerRadius: 5).fill(Self.todayColor)
+                        : nil
+                    )
                 }
             }
 
@@ -329,7 +341,6 @@ struct ClipboardContentView: View {
     @ObservedObject private var svc = ClipboardService.shared
     @ObservedObject private var theme = ThemeManager.shared
     @State private var selectedID: UUID?
-    @FocusState private var isFocused: Bool
 
     private func autoSelectFirst() {
         if let first = svc.filteredItems.first, selectedID == nil || !svc.filteredItems.contains(where: { $0.id == selectedID }) {
@@ -384,14 +395,14 @@ struct ClipboardContentView: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 6)
                     }
-                    .background(theme.colors.cardBackground)
-                    .cornerRadius(8)
-                    .padding(.horizontal, 8)
-                    .focusable()
-                    .focused($isFocused)
-                    .focusEffectDisabled()
-                    .onMoveCommand { direction in
-                        moveSelection(direction, proxy: proxy)
+                    .onReceive(NotificationCenter.default.publisher(for: .clipboardMoveUp)) { _ in
+                        moveSelection(.up, proxy: proxy)
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .clipboardMoveDown)) { _ in
+                        moveSelection(.down, proxy: proxy)
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .clipboardEnter)) { _ in
+                        handleEnter()
                     }
                 }
             }
@@ -399,9 +410,16 @@ struct ClipboardContentView: View {
         .frame(height: 260)
         .onAppear {
             autoSelectFirst()
-            isFocused = true
         }
         .onChange(of: svc.filteredItems.map(\.id)) { _ in autoSelectFirst() }
+    }
+
+    private func handleEnter() {
+        guard let id = selectedID,
+              let item = svc.filteredItems.first(where: { $0.id == id }) else { return }
+        svc.copyToClipboard(item)
+        svc.moveToTop(item)
+        NotificationCenter.default.post(name: .togglePanel, object: nil)
     }
 
     private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {

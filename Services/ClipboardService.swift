@@ -8,7 +8,7 @@ class ClipboardService: ObservableObject {
     static let shared = ClipboardService()
 
     private let pasteboard = NSPasteboard.general
-    private let maxItems = 100
+    private let maxItems = 200
     private let storageDirectory: URL
     private let storageFile: URL
     private var monitorTimer: Timer?
@@ -63,16 +63,18 @@ class ClipboardService: ObservableObject {
 
     private func checkClipboard() {
         // Check for text content
-        if let newText = pasteboard.string(forType: .string),
-           !newText.isEmpty,
-           !items.contains(where: { item in
-               if case .text(let existingText) = item.content {
-                   return existingText == newText
-               }
-               return false
-           }) {
-            let newItem = ClipboardItem(content: .text(newText))
-            addItem(newItem)
+        if let rawText = pasteboard.string(forType: .string) {
+            let newText = rawText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !newText.isEmpty,
+               !items.contains(where: { item in
+                   if case .text(let existingText) = item.content {
+                       return existingText == newText
+                   }
+                   return false
+               }) {
+                let newItem = ClipboardItem(content: .text(newText))
+                addItem(newItem)
+            }
         }
 
         // Check for image content
@@ -93,6 +95,12 @@ class ClipboardService: ObservableObject {
         if items.count > maxItems {
             items.removeLast()
         }
+        saveItems()
+    }
+
+    func moveToTop(_ item: ClipboardItem) {
+        items.removeAll { $0.id == item.id }
+        items.insert(item, at: 0)
         saveItems()
     }
 
