@@ -111,7 +111,7 @@ struct InfoDashboardView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 6) {
             MusicCompactCard()
-                .frame(height: 118)
+                .frame(width: 118, height: 118)
             CalendarCompactCard()
                 .frame(height: 118)
             WeatherCompactCard()
@@ -189,63 +189,70 @@ private struct CalendarCompactCard: View {
         let f = DateFormatter(); f.dateFormat = "d"; return f
     }()
 
+    private static let monthFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "MMMM"; return f
+    }()
+
     /// Dark green matching the tab accent / Info module.
     private static let todayColor = Color(red: 0.05, green: 0.45, blue: 0.25)
 
     var body: some View {
-        VStack(spacing: 6) {
-            // Week strip — Mon–Sun, only today has the white underline
+        VStack(spacing: 0) {
+            // Month at top
+            Text(Self.monthFormatter.string(from: now).uppercased())
+                .font(Mono.bold(11))
+                .foregroundColor(theme.colors.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Week strip
             HStack(spacing: 2) {
                 ForEach(weekDates(), id: \.self) { date in
                     let isToday = calendar.isDate(date, inSameDayAs: now)
                     VStack(spacing: 2) {
                         Text(Self.dayFormatter.string(from: date))
-                            .font(Mono.medium(8))
+                            .font(Mono.bold(7))
                             .foregroundColor(isToday ? .white : theme.colors.textSecondary)
                         Text(Self.dayNumFormatter.string(from: date))
-                            .font(isToday ? Mono.bold(9) : Mono.regular(9))
+                            .font(Mono.bold(8))
                             .foregroundColor(isToday ? .white : theme.colors.text)
 
-                        // Underline — only for today
-                        RoundedRectangle(cornerRadius: 1)
-                            .fill(isToday ? .white : Color.clear)
-                            .frame(height: 2)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 2)
                     .background(
                         isToday
-                        ? RoundedRectangle(cornerRadius: 5).fill(Self.todayColor)
+                        ? RoundedRectangle(cornerRadius: 4).fill(Self.todayColor)
                         : nil
                     )
                 }
             }
+            .padding(.top, 4)
 
             Spacer()
 
-            // Current time
+            // Current time — larger
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text({
                     let f = DateFormatter(); f.dateFormat = "h:mm"; return f.string(from: now)
                 }())
-                    .font(Mono.bold(16))
+                    .font(Mono.bold(24))
                 Text({
                     let f = DateFormatter(); f.dateFormat = "ss"; return f.string(from: now)
                 }())
-                    .font(Mono.medium(9))
+                    .font(Mono.medium(14))
             }
             .foregroundStyle(
                 LinearGradient(
-                    colors: [Color.purple, Color.blue, Color.cyan],
+                    colors: theme.theme == .light
+                        ? [Color(red: 0.3, green: 0.1, blue: 0.6),
+                           Color(red: 0.1, green: 0.2, blue: 0.7),
+                           Color(red: 0.0, green: 0.4, blue: 0.6)]
+                        : [Color(red: 0.7, green: 0.4, blue: 1.0),
+                           Color(red: 0.3, green: 0.5, blue: 1.0),
+                           Color(red: 0.2, green: 0.7, blue: 1.0)],
                     startPoint: .leading, endPoint: .trailing
                 )
             )
-
-            Text({
-                let f = DateFormatter(); f.dateFormat = "EEEE, MMMM d"; return f.string(from: now)
-            }())
-                .font(Mono.regular(7))
-                .foregroundColor(theme.colors.textMuted)
         }
         .padding(6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

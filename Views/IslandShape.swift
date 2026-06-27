@@ -5,7 +5,7 @@ import SwiftUI
 /// Overall width 480 pt; ears are 18 pt each side.
 struct IslandShape: Shape {
     let cornerRadius: CGFloat = 22
-    let earWidth: CGFloat = 8
+    let earWidth: CGFloat = 14
     let earHeight: CGFloat = 36
 
     func path(in rect: CGRect) -> Path {
@@ -24,8 +24,7 @@ struct IslandShape: Shape {
         // Pull control inside body so the curve dips inward
         p.addQuadCurve(
             to: CGPoint(x: bl, y: eh),
-            control: CGPoint(x: bl + 2, y: eh * 0.35)
-        )
+            control: CGPoint(x: bl + 1, y: 8)          )
 
         // ── Left side ──
         p.addLine(to: CGPoint(x: bl, y: h - r))
@@ -49,8 +48,7 @@ struct IslandShape: Shape {
         // ── Right ear: concave curve to outer tip ──
         p.addQuadCurve(
             to: CGPoint(x: w, y: 0),
-            control: CGPoint(x: br - 2, y: eh * 0.35)
-        )
+            control: CGPoint(x: br - 1, y: 8)          )
 
         // ── Top edge ──
         p.addLine(to: CGPoint(x: 0, y: 0))
