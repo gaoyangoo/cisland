@@ -41,42 +41,56 @@ public final class KeyValueModule: ObservableObject, IslandModule {
 struct KeyValueContentView: View {
     @ObservedObject private var store = SnippetStore.shared
     @ObservedObject private var theme = ThemeManager.shared
-    @State private var newKey: String = ""
-    @State private var newValue: String = ""
     @State private var copiedID: UUID?
     @State private var selectedID: UUID?
+    @State private var showingSheet = false
+    @State private var sheetTitle = ""
+    @State private var sheetKey = ""
+    @State private var sheetValue = ""
+    @State private var editingItemID: UUID?
 
     var body: some View {
         VStack(spacing: 0) {
-            // Add new snippet input
-            HStack(spacing: 6) {
-                TextField("Key", text: $newKey)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 10, design: .monospaced))
-                    .foregroundColor(theme.colors.text)
-                    .frame(maxWidth: .infinity)
-
-                TextField("Value", text: $newValue)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 10, design: .monospaced))
-                    .foregroundColor(theme.colors.text)
-                    .frame(maxWidth: .infinity)
-                    .onSubmit { addItem() }
-
-                Button(action: addItem) {
+            // Header with + button
+            HStack {
+                Spacer()
+                Button(action: {
+                    sheetTitle = "New Snippet"
+                    sheetKey = ""
+                    sheetValue = ""
+                    editingItemID = nil
+                    showingSheet = true
+                }) {
                     Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(newKey.isEmpty || newValue.isEmpty ? theme.colors.emptyIcon : .green)
+                        .font(.system(size: 16))
+                        .foregroundColor(.green)
                 }
                 .buttonStyle(.plain)
-                .disabled(newKey.isEmpty || newValue.isEmpty)
+                .popover(isPresented: $showingSheet, arrowEdge: .top) {
+                    SnippetEditSheet(
+                        title: sheetTitle,
+                        key: $sheetKey,
+                        value: $sheetValue,
+                        onSave: {
+                            let k = sheetKey.trimmingCharacters(in: .whitespacesAndNewlines)
+                            let v = sheetValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !k.isEmpty, !v.isEmpty {
+                                if let id = editingItemID {
+                                    store.updateItem(id: id, key: k, value: v)
+                                } else {
+                                    store.addItem(key: k, value: v)
+                                }
+                            }
+                        },
+                        onDismiss: { showingSheet = false }
+                    )
+                    .environment(\.colorScheme, theme.colors.colorScheme)
+                    .background(.ultraThinMaterial)
+                }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(theme.colors.searchFieldBackground)
-            .cornerRadius(8)
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 12)
             .padding(.top, 8)
+            .padding(.bottom, 4)
 
             if store.items.isEmpty {
                 VStack(spacing: 6) {
@@ -99,7 +113,14 @@ struct KeyValueContentView: View {
                                     isSelected: selectedID == item.id,
                                     onDelete: { delete(item) },
                                     onCopy: { copy(item) },
-                                    onUpdate: { store.updateItem(id: item.id, key: item.key, value: item.value) }
+                                    onUpdate: { store.updateItem(id: item.id, key: item.key, value: item.value) },
+                                    onEditRequest: {
+                                        sheetTitle = "Edit Snippet"
+                                        sheetKey = item.key
+                                        sheetValue = item.value
+                                        editingItemID = item.id
+                                        showingSheet = true
+                                    }
                                 )
                                 .id(item.id)
                             }
@@ -144,15 +165,6 @@ struct KeyValueContentView: View {
         }
     }
 
-    private func addItem() {
-        let k = newKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        let v = newValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !k.isEmpty, !v.isEmpty else { return }
-        store.addItem(key: k, value: v)
-        newKey = ""
-        newValue = ""
-    }
-
     private func copy(_ item: KeyValueItem) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(item.value, forType: .string)
@@ -179,96 +191,100 @@ private struct EditableSnippetRow: View {
     let onDelete: () -> Void
     let onCopy: () -> Void
     let onUpdate: () -> Void
-
-    @State private var editingKey: String = ""
-    @State private var editingValue: String = ""
-    @State private var isEditing = false
-    @FocusState private var focusedField: Field?
-
-    enum Field { case key, value }
+    let onEditRequest: () -> Void
 
     var body: some View {
-        HStack(spacing: 8) {
-            if isEditing {
-                VStack(alignment: .leading, spacing: 2) {
-                    TextField("Key", text: $editingKey)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 8, weight: .medium, design: .monospaced))
-                        .foregroundColor(theme.colors.textSecondary)
-                        .focused($focusedField, equals: .key)
-                        .onSubmit { focusedField = .value }
-                    TextField("Value", text: $editingValue)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundColor(theme.colors.text)
-                        .focused($focusedField, equals: .value)
-                        .onSubmit { commitEdit() }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                Button(action: commitEdit) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 12))
-                        .foregroundColor(.green)
-                }
-                .buttonStyle(.plain)
-            } else {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.key)
-                        .font(.system(size: 8, weight: .medium, design: .monospaced))
-                        .foregroundColor(theme.colors.textMuted)
-                    Text(item.value)
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundColor(theme.colors.text)
-                        .lineLimit(2)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-                .onTapGesture(count: 2) {
-                    beginEdit()
-                }
-
-                if copiedID == item.id {
-                    Text("Copied")
-                        .font(.system(size: 8, design: .monospaced))
-                        .foregroundColor(.green)
-                        .transition(.scale.combined(with: .opacity))
-                }
-
-                Button(action: onDelete) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 12))
-                        .foregroundColor(theme.colors.textMuted)
-                }
-                .buttonStyle(.plain)
+        HStack(spacing: 6) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.key)
+                    .font(.system(size: 8, weight: .medium, design: .monospaced))
+                    .foregroundColor(theme.colors.textMuted)
+                Text(item.value)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(theme.colors.text)
+                    .lineLimit(2)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture(count: 2) { onCopy() }
+
+            if copiedID == item.id {
+                Text("Copied")
+                    .font(.system(size: 8, design: .monospaced))
+                    .foregroundColor(.green)
+                    .transition(.scale.combined(with: .opacity))
+            }
+
+            Button(action: onEditRequest) {
+                Image(systemName: "pencil")
+                    .font(.system(size: 9))
+                    .foregroundColor(theme.colors.textMuted)
+            }
+            .buttonStyle(.plain)
+
+            Button(action: onDelete) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(theme.colors.textMuted)
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(isEditing ? theme.colors.snippetRowEditing
-                    : isSelected ? theme.colors.snippetRowHover
-                    : theme.colors.snippetRow)
+        .background(isSelected ? Color.accentColor.opacity(0.25) : theme.colors.snippetRow)
         .cornerRadius(8)
         .contentShape(Rectangle())
-        .onTapGesture(count: 1) {
-            if !isEditing { onCopy() }
+    }
+}
+
+// MARK: - Edit sheet (glass background, like theme picker)
+
+private struct SnippetEditSheet: View {
+    @ObservedObject private var theme = ThemeManager.shared
+    let title: String
+    @Binding var key: String
+    @Binding var value: String
+    let onSave: () -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                .foregroundColor(theme.colors.textSecondary)
+
+            TextField("Key", text: $key)
+                .textFieldStyle(.plain)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundColor(theme.colors.text)
+                .padding(8)
+                .background(theme.colors.searchFieldBackground)
+                .cornerRadius(6)
+
+            TextField("Value", text: $value)
+                .textFieldStyle(.plain)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundColor(theme.colors.text)
+                .padding(8)
+                .background(theme.colors.searchFieldBackground)
+                .cornerRadius(6)
+
+            HStack {
+                Button("Cancel") { onDismiss() }
+                    .font(.system(size: 10))
+                Spacer()
+                Button("Save") { onSave(); onDismiss() }
+                    .font(.system(size: 10, weight: .semibold))
+                    .disabled(key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                              value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
         }
-    }
-
-    private func beginEdit() {
-        editingKey = item.key
-        editingValue = item.value
-        isEditing = true
-        focusedField = .key
-    }
-
-    private func commitEdit() {
-        let k = editingKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        let v = editingValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !k.isEmpty { item.key = k }
-        if !v.isEmpty { item.value = v }
-        isEditing = false
-        focusedField = nil
-        onUpdate()
+        .padding(16)
+        .frame(width: 260)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(.ultraThinMaterial)
+        )
+        .environment(\.colorScheme, theme.colors.colorScheme)
     }
 }

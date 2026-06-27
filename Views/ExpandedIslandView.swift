@@ -151,11 +151,11 @@ private struct MusicCompactCard: View {
 
             VStack(spacing: 2) {
                 Text(svc.musicInfo.title)
-                    .font(Mono.semibold(9))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundColor(.white)
                     .lineLimit(1)
                 Text(svc.musicInfo.artist)
-                    .font(Mono.regular(8))
+                    .font(.system(size: 8, weight: .regular))
                     .foregroundColor(.white.opacity(0.6))
                     .lineLimit(1)
             }
@@ -192,15 +192,21 @@ private struct CalendarCompactCard: View {
     private static let monthFormatter: DateFormatter = {
         let f = DateFormatter(); f.dateFormat = "MMMM"; return f
     }()
+    private static let lunarCalendar = Calendar(identifier: .chinese)
+    private static let lunarFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none
+        f.calendar = Calendar(identifier: .chinese)
+        return f
+    }()
 
     /// Dark green matching the tab accent / Info module.
     private static let todayColor = Color(red: 0.05, green: 0.45, blue: 0.25)
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 2) {
             // Month at top
             Text(Self.monthFormatter.string(from: now).uppercased())
-                .font(Mono.bold(11))
+                .font(.system(size: 11, weight: .bold))
                 .foregroundColor(theme.colors.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -210,36 +216,35 @@ private struct CalendarCompactCard: View {
                     let isToday = calendar.isDate(date, inSameDayAs: now)
                     VStack(spacing: 2) {
                         Text(Self.dayFormatter.string(from: date))
-                            .font(Mono.bold(7))
-                            .foregroundColor(isToday ? .white : theme.colors.textSecondary)
+                            .font(.system(size: 7, weight: .bold))
+                            .foregroundColor(isToday ? Self.todayColor : theme.colors.textSecondary)
                         Text(Self.dayNumFormatter.string(from: date))
-                            .font(Mono.bold(8))
+                            .font(.system(size: 10, weight: .bold))
                             .foregroundColor(isToday ? .white : theme.colors.text)
-
+                            .frame(width: 22, height: 22)
+                            .background(
+                                isToday
+                                ? Circle().fill(Self.todayColor)
+                                : nil
+                            )
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 2)
-                    .background(
-                        isToday
-                        ? RoundedRectangle(cornerRadius: 4).fill(Self.todayColor)
-                        : nil
-                    )
+                    .padding(.vertical, 1)
                 }
             }
-            .padding(.top, 4)
 
-            Spacer()
+            Spacer().frame(height: 4)
 
-            // Current time — larger
+            // Current time
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text({
                     let f = DateFormatter(); f.dateFormat = "h:mm"; return f.string(from: now)
                 }())
-                    .font(Mono.bold(24))
+                    .font(.system(size: 26, weight: .bold))
                 Text({
                     let f = DateFormatter(); f.dateFormat = "ss"; return f.string(from: now)
                 }())
-                    .font(Mono.medium(14))
+                    .font(.system(size: 14, weight: .medium))
             }
             .foregroundStyle(
                 LinearGradient(
@@ -253,12 +258,32 @@ private struct CalendarCompactCard: View {
                     startPoint: .leading, endPoint: .trailing
                 )
             )
+
+            // Lunar date
+            Text(lunarDateString())
+                .font(.system(size: 8, weight: .medium))
+                .foregroundColor(theme.colors.textSecondary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Capsule().fill(theme.colors.cardBackgroundAlt))
         }
         .padding(6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(theme.colors.cardBackground)
         .cornerRadius(10)
         .onReceive(timer) { t in now = t }
+    }
+
+    private func lunarDateString() -> String {
+        let comps = Self.lunarCalendar.dateComponents([.month, .day], from: now)
+        let m = comps.month ?? 1
+        let d = comps.day ?? 1
+        let months = ["正月","二月","三月","四月","五月","六月",
+                      "七月","八月","九月","十月","冬月","腊月"]
+        let days = ["","初一","初二","初三","初四","初五","初六","初七","初八","初九","初十",
+                    "十一","十二","十三","十四","十五","十六","十七","十八","十九","二十",
+                    "廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"]
+        return months[min(m-1, 11)] + (d <= 30 ? days[d] : "")
     }
 
     private func weekDates() -> [Date] {
@@ -286,21 +311,21 @@ private struct WeatherCompactCard: View {
                     .foregroundColor(iconColorFor(code: weather.conditionCode))
 
                 Text(weather.temperatureString)
-                    .font(Mono.bold(17))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(theme.colors.text)
 
                 Text(weather.location)
-                    .font(Mono.regular(8))
+                    .font(.system(size: 8, weight: .regular))
                     .foregroundColor(theme.colors.textSecondary)
             } else {
                 Image(systemName: "cloud.fill")
                     .font(.system(size: 24))
                     .foregroundColor(theme.colors.emptyIcon)
                 Text("--°C")
-                    .font(Mono.bold(17))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(theme.colors.emptyText)
                 Text("Loading...")
-                    .font(Mono.regular(8))
+                    .font(.system(size: 8, weight: .regular))
                     .foregroundColor(theme.colors.emptyText)
             }
         }
@@ -449,38 +474,39 @@ struct ClipboardContentView: View {
 
     @ViewBuilder
     private func clipboardRow(_ item: ClipboardItem, isSelected: Bool) -> some View {
-        let highlight = isSelected ? theme.colors.snippetRowHover : theme.colors.snippetRow
         switch item.content {
         case .text(let text):
             Text(text)
                 .font(Mono.regular(10))
                 .foregroundColor(theme.colors.text)
-                .lineLimit(2)
+                .lineLimit(1)
+                .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(highlight)
+                .frame(height: 28)
+                .background(isSelected ? Color.accentColor.opacity(0.3) : Color.clear)
                 .cornerRadius(4)
                 .contentShape(Rectangle())
 
         case .image(let data):
-            HStack {
+            HStack(spacing: 8) {
                 if let nsImage = NSImage(data: data) {
                     Image(nsImage: nsImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 60)
+                        .frame(height: isSelected ? 80 : 40)
                         .cornerRadius(4)
                 }
-                Text("Image — \(ByteCountFormatter.string(fromByteCount: Int64(data.count), countStyle: .file))")
+                Text("Image (\(ByteCountFormatter.string(fromByteCount: Int64(data.count), countStyle: .file)))")
                     .font(Mono.regular(9))
                     .foregroundColor(theme.colors.textMuted)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                 Spacer()
             }
             .padding(.horizontal, 8)
-            .padding(.vertical, 5)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(highlight)
+            .frame(height: isSelected ? 88 : 44)
+            .background(isSelected ? Color.accentColor.opacity(0.3) : Color.clear)
             .cornerRadius(4)
             .contentShape(Rectangle())
         }
@@ -495,11 +521,11 @@ private struct ThemePickerView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text("Appearance")
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .font(.system(size: 9, weight: .semibold, design: .monospaced))
                 .foregroundColor(themeManager.colors.textSecondary)
-                .padding(.horizontal, 16)
-                .padding(.top, 14)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             ForEach(AppTheme.allCases, id: \.self) { theme in
@@ -508,32 +534,26 @@ private struct ThemePickerView: View {
                         themeManager.theme = theme
                     }
                 }) {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 6) {
                         Image(systemName: theme.iconName)
-                            .font(.system(size: 13))
-                            .frame(width: 22)
+                            .font(.system(size: 11))
+                            .frame(width: 18)
                             .foregroundColor(themeManager.theme == theme ? .accentColor : themeManager.colors.textSecondary)
 
                         Text(theme.displayName)
-                            .font(.system(size: 12, design: .monospaced))
-                            .foregroundColor(themeManager.colors.text)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(themeManager.theme == theme ? .accentColor : themeManager.colors.text)
 
                         Spacer()
-
-                        if themeManager.theme == theme {
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(.accentColor)
-                        }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
         }
-        .frame(width: 160)
-        .padding(.bottom, 8)
+        .frame(width: 130)
+        .padding(.bottom, 4)
     }
 }

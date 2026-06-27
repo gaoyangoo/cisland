@@ -8,7 +8,7 @@ class ClipboardService: ObservableObject {
     static let shared = ClipboardService()
 
     private let pasteboard = NSPasteboard.general
-    private let maxItems = 200
+    private let maxItems = 100
     private let storageDirectory: URL
     private let storageFile: URL
     private var monitorTimer: Timer?

@@ -57,19 +57,19 @@ struct ThemeColors {
     )
 
     static let light = ThemeColors(
-        text: .black.opacity(0.82),
-        textSecondary: .black.opacity(0.50),
-        textMuted: .black.opacity(0.30),
-        cardBackground: .black.opacity(0.05),
-        cardBackgroundAlt: .black.opacity(0.08),
-        tabBarBackground: .black.opacity(0.07),
-        searchFieldBackground: .black.opacity(0.06),
-        snippetRow: .black.opacity(0.03),
-        snippetRowEditing: .black.opacity(0.06),
+        text: .black.opacity(0.90),
+        textSecondary: .black.opacity(0.55),
+        textMuted: .black.opacity(0.35),
+        cardBackground: .black.opacity(0.03),
+        cardBackgroundAlt: .black.opacity(0.05),
+        tabBarBackground: .black.opacity(0.04),
+        searchFieldBackground: .black.opacity(0.03),
+        snippetRow: .black.opacity(0.02),
+        snippetRowEditing: .black.opacity(0.04),
         snippetRowHover: Color(red: 0.15, green: 0.55, blue: 0.30).opacity(0.18),
-        emptyIcon: .black.opacity(0.12),
-        emptyText: .black.opacity(0.30),
-        gearForeground: .black.opacity(0.45),
+        emptyIcon: .black.opacity(0.10),
+        emptyText: .black.opacity(0.25),
+        gearForeground: .black.opacity(0.40),
         colorScheme: .light
     )
 }

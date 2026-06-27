@@ -13,7 +13,7 @@ public struct IslandContainerView: View {
             .background(
                 IslandShape()
                     .fill(themeManager.theme == .light
-                          ? AnyShapeStyle(.regularMaterial)
+                          ? AnyShapeStyle(Color.white.opacity(0.96))
                           : AnyShapeStyle(Color.black))
             )
             .environment(\.colorScheme, themeManager.colors.colorScheme)

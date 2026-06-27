@@ -89,7 +89,7 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     private func fetchWeatherForCoordinates(latitude: Double, longitude: Double) {
-        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&current_weather=true"
+        let urlString = "https://wttr.in/\(latitude),\(longitude)?format=j1"
 
         guard let url = URL(string: urlString) else {
             handleWeatherServiceError(NSError(domain: "WeatherService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
@@ -119,21 +119,32 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     private func parseWeatherData(_ data: Data) {
         do {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-               let current = json["current_weather"] as? [String: Any],
-               let temperature = current["temperature"] as? Double,
-               let weatherCode = current["weathercode"] as? Int {
+               let current = json["current_condition"] as? [[String: Any]],
+               let condition = current.first,
+               let tempC = condition["temp_C"] as? String,
+               let temperature = Double(tempC),
+               let weatherCodeStr = condition["weatherCode"] as? String,
+               let weatherCode = Int(weatherCodeStr) {
+
+                // Use wttr.in's area name if available
+                var location = getCurrentLocationString()
+                if let nearest = json["nearest_area"] as? [[String: Any]],
+                   let area = nearest.first,
+                   let areaName = area["areaName"] as? [[String: Any]],
+                   let name = areaName.first?["value"] as? String {
+                    location = name
+                }
 
                 let weather = WeatherModel(
                     temperature: temperature,
                     conditionCode: weatherCode,
-                    location: getCurrentLocationString()
+                    location: location
                 )
 
-                self.currentWeather = weather
-                self.lastUpdated = Date()
-                self.isUpdating = false
-
                 DispatchQueue.main.async {
+                    self.currentWeather = weather
+                    self.lastUpdated = Date()
+                    self.isUpdating = false
                     self.delegate?.weatherServiceDidUpdateWeather(self)
                 }
             } else {
@@ -146,11 +157,23 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     private func getCurrentLocationString() -> String {
-        let location = locationManager.location
-        if let coordinate = location?.coordinate {
-            return String(format: "%.2f, %.2f", coordinate.latitude, coordinate.longitude)
+        // Return cached city name if available
+        if let cached = UserDefaults.standard.string(forKey: "weatherCity"), !cached.isEmpty {
+            return cached
         }
-        return "Default Location"
+        // Reverse geocode in background
+        if let loc = locationManager.location {
+            CLGeocoder().reverseGeocodeLocation(loc) { [weak self] placemarks, _ in
+                if let pm = placemarks?.first {
+                    let name = pm.subLocality ?? pm.locality ?? pm.administrativeArea ?? "Unknown"
+                    // Log available fields for debugging
+                    print("Weather geocode: subLocality=\(pm.subLocality ?? "nil"), locality=\(pm.locality ?? "nil"), adminArea=\(pm.administrativeArea ?? "nil"), subAdmin=\(pm.subAdministrativeArea ?? "nil")")
+                    UserDefaults.standard.set(name, forKey: "weatherCity")
+                    DispatchQueue.main.async { self?.objectWillChange.send() }
+                }
+            }
+        }
+        return "Loading..."
     }
 
     private func handleWeatherServiceError(_ error: Error) {
