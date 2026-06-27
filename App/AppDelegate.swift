@@ -29,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         self.statusItem = item
         if let button = item.button {
-            button.title = "🍉"
+            button.title = "⎈"
             button.target = self
             button.action = #selector(togglePanel)
             button.sendAction(on: [.leftMouseDown])
