@@ -30,8 +30,8 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
     var delegate: (any WeatherServiceDelegateProtocol)?
 
-    var currentWeather: WeatherModel?
-    var lastUpdated: Date?
+    @Published var currentWeather: WeatherModel?
+    @Published var lastUpdated: Date?
     private var isUpdating = false
 
     // Default coordinates (backup when location access is denied)
@@ -55,11 +55,12 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
     // MARK: - Public Methods
 
-    func start() {
-        updateWeather()
+    private var timer: Timer?
 
-        // Set up periodic updates every 15 minutes
-        Timer.scheduledTimer(withTimeInterval: 900, repeats: true) { [weak self] _ in
+    func start() {
+        guard timer == nil else { return }
+        updateWeather()
+        timer = Timer.scheduledTimer(withTimeInterval: 900, repeats: true) { [weak self] _ in
             self?.updateWeather()
         }
     }
@@ -76,14 +77,12 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
     public func updateWeather() {
         guard !isUpdating else { return }
-
         isUpdating = true
 
         if locationManager.authorizationStatus == .authorized ||
            locationManager.authorizationStatus == .authorizedAlways {
             locationManager.startUpdatingLocation()
         } else {
-            // Use default coordinates if location access is denied
             fetchWeatherForCoordinates(latitude: defaultLatitude, longitude: defaultLongitude)
         }
     }
@@ -118,37 +117,49 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
 
     private func parseWeatherData(_ data: Data) {
         do {
-            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-               let current = json["current_condition"] as? [[String: Any]],
-               let condition = current.first,
-               let tempC = condition["temp_C"] as? String,
-               let temperature = Double(tempC),
-               let weatherCodeStr = condition["weatherCode"] as? String,
-               let weatherCode = Int(weatherCodeStr) {
+            guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                  let current = json["current_condition"] as? [[String: Any]],
+                  let condition = current.first,
+                  let tempC = condition["temp_C"] as? String,
+                  let temperature = Double(tempC),
+                  let weatherCodeStr = condition["weatherCode"] as? String,
+                  let weatherCode = Int(weatherCodeStr) else {
+                self.isUpdating = false
+                return
+            }
 
-                // Use wttr.in's area name if available
-                var location = getCurrentLocationString()
-                if let nearest = json["nearest_area"] as? [[String: Any]],
-                   let area = nearest.first,
-                   let areaName = area["areaName"] as? [[String: Any]],
-                   let name = areaName.first?["value"] as? String {
-                    location = name
+            var location = getCurrentLocationString()
+            // If geocode hasn't completed yet, trigger it now
+            if location == "Loading..." { triggerReverseGeocode() }
+
+            var tomorrowTemp: String? = nil
+            var tomorrowCode: Int? = nil
+            if let weatherArr = json["weather"] as? [[String: Any]], weatherArr.count >= 2 {
+                let tomorrow = weatherArr[1]
+                if let tMin = tomorrow["mintempC"] as? String,
+                   let tMax = tomorrow["maxtempC"] as? String,
+                   let hly = tomorrow["hourly"] as? [[String: Any]],
+                   let midday = hly.first(where: { ($0["time"] as? String) == "1200" }),
+                   let codeStr = midday["weatherCode"] as? String,
+                   let code = Int(codeStr) {
+                    tomorrowTemp = "\(tMin)~\(tMax)"
+                    tomorrowCode = code
                 }
+            }
 
-                let weather = WeatherModel(
-                    temperature: temperature,
-                    conditionCode: weatherCode,
-                    location: location
-                )
+            let weather = WeatherModel(
+                temperature: temperature,
+                conditionCode: weatherCode,
+                location: location,
+                tomorrowTemp: tomorrowTemp,
+                tomorrowCode: tomorrowCode
+            )
 
-                DispatchQueue.main.async {
-                    self.currentWeather = weather
-                    self.lastUpdated = Date()
-                    self.isUpdating = false
-                    self.delegate?.weatherServiceDidUpdateWeather(self)
-                }
-            } else {
-                throw NSError(domain: "WeatherService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid weather data format"])
+            DispatchQueue.main.async {
+                self.currentWeather = weather
+                self.lastUpdated = Date()
+                self.isUpdating = false
+                self.delegate?.weatherServiceDidUpdateWeather(self)
             }
         } catch {
             self.isUpdating = false
@@ -157,23 +168,30 @@ class WeatherService: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     private func getCurrentLocationString() -> String {
-        // Return cached city name if available
         if let cached = UserDefaults.standard.string(forKey: "weatherCity"), !cached.isEmpty {
             return cached
         }
-        // Reverse geocode in background
-        if let loc = locationManager.location {
-            CLGeocoder().reverseGeocodeLocation(loc) { [weak self] placemarks, _ in
-                if let pm = placemarks?.first {
-                    let name = pm.subLocality ?? pm.locality ?? pm.administrativeArea ?? "Unknown"
-                    // Log available fields for debugging
-                    print("Weather geocode: subLocality=\(pm.subLocality ?? "nil"), locality=\(pm.locality ?? "nil"), adminArea=\(pm.administrativeArea ?? "nil"), subAdmin=\(pm.subAdministrativeArea ?? "nil")")
-                    UserDefaults.standard.set(name, forKey: "weatherCity")
-                    DispatchQueue.main.async { self?.objectWillChange.send() }
-                }
+        triggerReverseGeocode()
+        return "Loading..."
+    }
+
+    private func triggerReverseGeocode() {
+        guard let loc = locationManager.location else { return }
+        CLGeocoder().reverseGeocodeLocation(loc) { [weak self] placemarks, error in
+            guard let self, let pm = placemarks?.first else { return }
+            // Iterate all available fields to find the most specific Chinese name
+            let name = pm.subLocality          // e.g. 浦东新区
+                    ?? pm.thoroughfare          // e.g. 世纪大道
+                    ?? pm.subAdministrativeArea // e.g. 浦东新区 (alt)
+                    ?? pm.administrativeArea    // e.g. 上海市
+                    ?? pm.locality              // e.g. 上海市
+                    ?? pm.country
+                    ?? "Unknown"
+            if !name.isEmpty, name != UserDefaults.standard.string(forKey: "weatherCity") {
+                UserDefaults.standard.set(name, forKey: "weatherCity")
+                DispatchQueue.main.async { self.objectWillChange.send() }
             }
         }
-        return "Loading..."
     }
 
     private func handleWeatherServiceError(_ error: Error) {
@@ -214,9 +232,32 @@ struct WeatherModel {
     let temperature: Double
     let conditionCode: Int
     let location: String
+    let tomorrowTemp: String?
+    let tomorrowCode: Int?
 
-    // Convert temperature to string with proper formatting
     var temperatureString: String {
-        return String(format: "%.1f°C", temperature)
+        return String(format: "%.0f°", temperature)
+    }
+
+    var tomorrowString: String? {
+        guard let t = tomorrowTemp, let c = tomorrowCode else { return nil }
+        return "\(t)°  \(WeatherModel.iconFor(code: c))"
+    }
+
+    static func iconFor(code: Int) -> String {
+        // wttr.in weather codes
+        switch code {
+        case 113: return "☀️"       // Sunny
+        case 116: return "🌤️"       // Partly cloudy
+        case 119, 122: return "☁️"  // Cloudy / Overcast
+        case 143, 248, 260: return "🌫️" // Mist / Fog
+        case 176, 263, 266, 293...296: return "🌦️" // Light rain
+        case 179, 281...284, 299, 302, 305, 308: return "🌧️" // Moderate/heavy rain
+        case 182, 185: return "🌧️"  // Heavy sleet
+        case 200, 386, 389: return "⛈️" // Thunder
+        case 227, 230, 320, 323, 326, 329, 332, 335, 338...350: return "🌨️" // Snow
+        case 311...318: return "🌨️" // Sleet
+        default: return "☁️"
+        }
     }
 }

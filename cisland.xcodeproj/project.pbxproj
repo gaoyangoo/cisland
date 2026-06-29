@@ -30,6 +30,7 @@
 		7F3504267A1EF11D3A38067A /* IslandContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DA3556717FD383920A2D96 /* IslandContainerView.swift */; };
 		82B375CD80966A3D2D9B2433 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7266012F0EC4CC5A88ADF4FA /* WeatherService.swift */; };
 		888C8005F2AFB83926D18FC1 /* ClipboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99C439DE4A5900B6A74451 /* ClipboardView.swift */; };
+		8E01E4E8642F5753C3A44252 /* SystemMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527AAAA947DED2A445E21E6 /* SystemMonitorService.swift */; };
 		8EA595A2799BD412A1BEEDC3 /* WeatherCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FEBF4F55B90C99DD7847FC /* WeatherCard.swift */; };
 		ABE1AF64E5D3132F327A2208 /* WindowModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328C58ECE976E5657C803506 /* WindowModule.swift */; };
 		B11C15EE9B703B707EFB9DAE /* SnippetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FBABB2DC6D6C96C915796 /* SnippetStore.swift */; };
@@ -56,6 +57,7 @@
 		4153F5B24AF6650890EA76DB /* IslandSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandSize.swift; sourceTree = "<group>"; };
 		4B70FC3A1495B86A18738A48 /* StatusBarModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarModule.swift; sourceTree = "<group>"; };
 		4EFC75E4D648E772B42745B3 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		5527AAAA947DED2A445E21E6 /* SystemMonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorService.swift; sourceTree = "<group>"; };
 		55330124C782F72BA7669A87 /* CompactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactView.swift; sourceTree = "<group>"; };
 		565648171D556D2E7CCE943A /* ModuleRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleRegistry.swift; sourceTree = "<group>"; };
 		5FD96109E9B17F1670635A33 /* ClipboardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardModule.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				8467EB85AFA92C097C2AB94E /* ClipboardService.swift */,
 				F1251451833B57801C1C8762 /* MusicService.swift */,
 				C18FBABB2DC6D6C96C915796 /* SnippetStore.swift */,
+				5527AAAA947DED2A445E21E6 /* SystemMonitorService.swift */,
 				7266012F0EC4CC5A88ADF4FA /* WeatherService.swift */,
 			);
 			path = Services;
@@ -341,6 +344,7 @@
 				32786731840203BAA2B6B423 /* Notifications.swift in Sources */,
 				B11C15EE9B703B707EFB9DAE /* SnippetStore.swift in Sources */,
 				BE44599ACC18E52C7E493A0F /* StatusBarModule.swift in Sources */,
+				8E01E4E8642F5753C3A44252 /* SystemMonitorService.swift in Sources */,
 				E7B7B37D0322B330BBF63CF4 /* TabBarView.swift in Sources */,
 				BA3E08425AAF7875C21F18EF /* ThemeManager.swift in Sources */,
 				8EA595A2799BD412A1BEEDC3 /* WeatherCard.swift in Sources */,

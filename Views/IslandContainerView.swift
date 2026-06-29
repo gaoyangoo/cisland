@@ -8,7 +8,7 @@ public struct IslandContainerView: View {
 
     public var body: some View {
         ExpandedIslandView()
-            .frame(width: 492)
+            .frame(width: 640)
             .padding(.horizontal, 14)
             .background(
                 IslandShape()

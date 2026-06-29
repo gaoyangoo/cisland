@@ -117,6 +117,8 @@ struct InfoDashboardView: View {
             WeatherCompactCard()
                 .frame(maxWidth: 95)
                 .frame(height: 135)
+            SystemMonitorCard()
+                .frame(width: 115, height: 135)
         }
         .padding(.horizontal, 8)
         .padding(.top, 8)
@@ -316,64 +318,145 @@ private struct WeatherCompactCard: View {
     var body: some View {
         VStack(spacing: 4) {
             if let weather = svc.currentWeather {
-                Image(systemName: iconFor(code: weather.conditionCode))
-                    .font(.system(size: 24))
-                    .foregroundColor(iconColorFor(code: weather.conditionCode))
+                Text(WeatherModel.iconFor(code: weather.conditionCode))
+                    .font(.system(size: 28))
 
                 Text(weather.temperatureString)
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundColor(theme.colors.text)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(tempColor(weather.temperature))
 
                 Text(weather.location)
-                    .font(.system(size: 8, weight: .regular))
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(theme.colors.text)
+
+                if let tomorrow = weather.tomorrowString {
+                    Text(tomorrow)
+                        .font(.system(size: 8, weight: .regular))
+                        .foregroundColor(theme.colors.textSecondary)
+                }
             } else {
-                Image(systemName: "cloud.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(theme.colors.emptyIcon)
-                Text("--°C")
-                    .font(.system(size: 17, weight: .bold))
+                Text("☁️")
+                    .font(.system(size: 28))
+                Text("--°")
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(theme.colors.emptyText)
                 Text("Loading...")
-                    .font(.system(size: 8, weight: .regular))
+                    .font(.system(size: 9, weight: .regular))
                     .foregroundColor(theme.colors.emptyText)
             }
         }
         .padding(6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(theme.colors.cardBackground)
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .onAppear { svc.start() }
     }
 
-    private func iconFor(code: Int) -> String {
-        switch code {
-        case 0, 1: return "sun.max.fill"
-        case 2: return "cloud.sun.fill"
-        case 3: return "cloud.fill"
-        case 45, 48: return "smoke.fill"
-        case 51...57: return "cloud.drizzle.fill"
-        case 61...67: return "cloud.rain.fill"
-        case 71...77: return "cloud.snow.fill"
-        case 80...82: return "cloud.heavyrain.fill"
-        case 85, 86: return "cloud.snow.fill"
-        case 95...99: return "cloud.bolt.rain.fill"
-        default: return "cloud.fill"
+    private func tempColor(_ t: Double) -> Color {
+        if t <= 0 { return .cyan }
+        if t <= 10 { return .blue }
+        if t <= 20 { return .green }
+        if t <= 30 { return .orange }
+        return .red
+    }
+}
+
+// MARK: - System Monitor Card
+
+private struct SystemMonitorCard: View {
+    @ObservedObject private var svc = SystemMonitorService.shared
+    @ObservedObject private var theme = ThemeManager.shared
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            // CPU
+            metricRow(
+                icon: "cpu", iconColor: .orange,
+                label: "CPU", value: svc.stats.cpuString,
+                color: cpuColor, top: svc.stats.topCPUName
+            )
+            ProgressBar(value: svc.stats.cpu / 100, color: cpuColor)
+
+            // Memory
+            metricRow(
+                icon: "memorychip", iconColor: .blue,
+                label: "MEM", value: String(format: "%.0f%%", svc.stats.memoryPercent),
+                color: memColor, top: svc.stats.topMemName
+            )
+            ProgressBar(value: svc.stats.memoryPercent / 100, color: memColor)
+
+            // Power / Thermal
+            metricRow(
+                icon: "thermometer.medium", iconColor: thermalColor,
+                label: "TMP", value: svc.stats.thermalState,
+                color: thermalColor, top: svc.stats.powerSource
+            )
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(theme.colors.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .onAppear { svc.start() }
+    }
+
+    private func metricRow(icon: String, iconColor: Color, label: String, value: String, color: Color, top: String) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            HStack(spacing: 3) {
+                Image(systemName: icon)
+                    .font(.system(size: 8))
+                    .foregroundColor(iconColor)
+                Text(label)
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundColor(theme.colors.text)
+                Spacer()
+                Text(value)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundColor(color)
+            }
+            Text(top)
+                .font(.system(size: 7, weight: .regular))
+                .foregroundColor(theme.colors.textMuted)
+                .lineLimit(1)
         }
     }
 
-    private func iconColorFor(code: Int) -> Color {
-        switch code {
-        case 0, 1: return .yellow
-        case 2: return .blue
-        case 3: return .gray
-        case 45, 48: return .gray
-        case 51...67: return .blue
-        case 71...77, 85, 86: return .cyan
-        case 80...82: return .blue
-        case 95...99: return .yellow
-        default: return .gray
+    private var cpuColor: Color {
+        svc.stats.cpu < 50 ? .green : svc.stats.cpu < 80 ? .orange : .red
+    }
+
+    private var memColor: Color {
+        svc.stats.memoryPercent < 50 ? .green : svc.stats.memoryPercent < 80 ? .orange : .red
+    }
+
+    private var thermalColor: Color {
+        switch svc.stats.thermalState {
+        case "Nominal": return .green
+        case "Fair":    return .orange
+        case "Serious": return .red
+        case "Critical": return .red
+        default:         return .green
         }
+    }
+}
+
+// MARK: - Progress Bar
+
+private struct ProgressBar: View {
+    let value: Double // 0…1
+    let color: Color
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(color.opacity(0.15))
+                    .frame(height: 3)
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(color)
+                    .frame(width: max(geo.size.width * value, 3), height: 3)
+            }
+        }
+        .frame(height: 3)
     }
 }
 

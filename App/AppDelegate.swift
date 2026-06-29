@@ -43,6 +43,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ModuleRegistry.shared.addModule(ClipboardModule())
         ModuleRegistry.shared.addModule(KeyValueModule())
 
+        // Pre-warm services so data is ready when Info tab opens
+        WeatherService.shared.start()
+        MusicService.shared.start()
+        SystemMonitorService.shared.start()
+
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         self.statusItem = item
         if let button = item.button {
@@ -102,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func showPanel() {
-        let width: CGFloat = 520
+        let width: CGFloat = 670
 
         if panel == nil {
             let p = FloatingPanel(
