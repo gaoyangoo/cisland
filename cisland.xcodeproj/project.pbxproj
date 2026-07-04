@@ -33,6 +33,7 @@
 		8E01E4E8642F5753C3A44252 /* SystemMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527AAAA947DED2A445E21E6 /* SystemMonitorService.swift */; };
 		8EA595A2799BD412A1BEEDC3 /* WeatherCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FEBF4F55B90C99DD7847FC /* WeatherCard.swift */; };
 		ABE1AF64E5D3132F327A2208 /* WindowModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328C58ECE976E5657C803506 /* WindowModule.swift */; };
+		AD5D758BEC99127A7BBA08BB /* StorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E41320FE8CAB97CAEB8E829 /* StorageModule.swift */; };
 		B11C15EE9B703B707EFB9DAE /* SnippetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FBABB2DC6D6C96C915796 /* SnippetStore.swift */; };
 		BA3E08425AAF7875C21F18EF /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C51D509A2883DE3D683 /* ThemeManager.swift */; };
 		BE44599ACC18E52C7E493A0F /* StatusBarModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70FC3A1495B86A18738A48 /* StatusBarModule.swift */; };
@@ -50,6 +51,7 @@
 		06F73AF2CB12C8EDB1B90C8A /* InfoModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoModule.swift; sourceTree = "<group>"; };
 		19FEBF4F55B90C99DD7847FC /* WeatherCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCard.swift; sourceTree = "<group>"; };
 		2E0FDC8B94649EA2E7790B26 /* CalendarData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarData.swift; sourceTree = "<group>"; };
+		2E41320FE8CAB97CAEB8E829 /* StorageModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModule.swift; sourceTree = "<group>"; };
 		328C58ECE976E5657C803506 /* WindowModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowModule.swift; sourceTree = "<group>"; };
 		32A69B054C18CB24F6A76FBC /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		36A532C36371FED60143FBB8 /* MusicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCard.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				5BC1A000A172AA2CF5308FB9 /* ClipboardModule */,
 				25E5C8DD0AD8EAA9549CB347 /* InfoModule */,
 				4BAA09E83F0A9DEE287C6667 /* KeyValueModule */,
+				F23E08676BC6832DF78543AA /* StorageModule */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -244,6 +247,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		F23E08676BC6832DF78543AA /* StorageModule */ = {
+			isa = PBXGroup;
+			children = (
+				2E41320FE8CAB97CAEB8E829 /* StorageModule.swift */,
+			);
+			path = StorageModule;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -344,6 +355,7 @@
 				32786731840203BAA2B6B423 /* Notifications.swift in Sources */,
 				B11C15EE9B703B707EFB9DAE /* SnippetStore.swift in Sources */,
 				BE44599ACC18E52C7E493A0F /* StatusBarModule.swift in Sources */,
+				AD5D758BEC99127A7BBA08BB /* StorageModule.swift in Sources */,
 				8E01E4E8642F5753C3A44252 /* SystemMonitorService.swift in Sources */,
 				E7B7B37D0322B330BBF63CF4 /* TabBarView.swift in Sources */,
 				BA3E08425AAF7875C21F18EF /* ThemeManager.swift in Sources */,

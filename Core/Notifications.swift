@@ -39,6 +39,18 @@ public extension Notification.Name {
     /// Snippet — Enter key pressed on selected item
     static let snippetEnter = Notification.Name("snippetEnter")
 
+    /// Storage (combined) — move selection up
+    static let storageMoveUp = Notification.Name("storageMoveUp")
+
+    /// Storage (combined) — move selection down
+    static let storageMoveDown = Notification.Name("storageMoveDown")
+
+    /// Storage (combined) — Enter key pressed
+    static let storageEnter = Notification.Name("storageEnter")
+
+    /// Focus the search field in the active view
+    static let focusSearch = Notification.Name("focusSearch")
+
     /// Request the floating panel to close
     static let togglePanel = Notification.Name("togglePanel")
 }

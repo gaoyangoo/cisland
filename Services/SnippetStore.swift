@@ -5,6 +5,15 @@ import Foundation
 @MainActor
 final class SnippetStore: ObservableObject {
     @Published var items: [KeyValueItem] = []
+    @Published var searchTerm: String = ""
+
+    var filteredItems: [KeyValueItem] {
+        let term = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !term.isEmpty else { return items }
+        return items.filter {
+            $0.key.lowercased().contains(term) || $0.value.lowercased().contains(term)
+        }
+    }
 
     static let shared = SnippetStore()
 

@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Monospace font helpers — consistent typography across the app.
-private enum Mono {
+enum Mono {
     static func regular(_ size: CGFloat) -> Font { .system(size: size, weight: .regular, design: .monospaced) }
     static func medium(_ size: CGFloat) -> Font { .system(size: size, weight: .medium, design: .monospaced) }
     static func semibold(_ size: CGFloat) -> Font { .system(size: size, weight: .semibold, design: .monospaced) }
@@ -31,10 +31,8 @@ struct ExpandedIslandView: View {
             switch registry.activeModule.id {
             case "info":
                 InfoDashboardView()
-            case "clipboard":
-                ClipboardContentView()
-            case "keyvalue":
-                KeyValueContentView()
+            case "storage":
+                StorageContentView()
             default:
                 registry.activeModule.expandedView.padding(12)
             }
@@ -272,10 +270,12 @@ private struct CalendarCompactCard: View {
                 .padding(.vertical, 2)
                 .background(Capsule().fill(theme.colors.cardBackgroundAlt))
         }
-        .padding(6)
+        .padding(.horizontal, 6)
+        .padding(.top, 2)
+        .padding(.bottom, 6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(theme.colors.cardBackground)
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .onReceive(timer) { t in now = t }
     }
 
@@ -466,6 +466,7 @@ struct ClipboardContentView: View {
     @ObservedObject private var svc = ClipboardService.shared
     @ObservedObject private var theme = ThemeManager.shared
     @State private var selectedID: UUID?
+    @FocusState private var isSearchFocused: Bool
 
     private func autoSelectFirst() {
         if let first = svc.filteredItems.first, selectedID == nil || !svc.filteredItems.contains(where: { $0.id == selectedID }) {
@@ -484,13 +485,13 @@ struct ClipboardContentView: View {
                     .textFieldStyle(.plain)
                     .font(Mono.regular(10))
                     .foregroundColor(theme.colors.text)
+                    .focused($isSearchFocused)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .background(theme.colors.searchFieldBackground)
             .cornerRadius(6)
-            .padding(.horizontal, 8)
-            .padding(.top, 8)
+            .padding(.top, 4)
 
             if svc.filteredItems.isEmpty {
                 VStack(spacing: 8) {
@@ -518,8 +519,7 @@ struct ClipboardContentView: View {
                                     }
                             }
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
+                        .padding(.vertical, 2)
                     }
                     .onReceive(NotificationCenter.default.publisher(for: .clipboardMoveUp)) { _ in
                         moveSelection(.up, proxy: proxy)
@@ -538,6 +538,9 @@ struct ClipboardContentView: View {
             autoSelectFirst()
         }
         .onChange(of: svc.filteredItems.map(\.id)) { _ in autoSelectFirst() }
+        .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in
+            isSearchFocused = true
+        }
     }
 
     private func handleEnter() {

@@ -40,8 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
 
         ModuleRegistry.shared.addModule(InfoModule())
-        ModuleRegistry.shared.addModule(ClipboardModule())
-        ModuleRegistry.shared.addModule(KeyValueModule())
+        ModuleRegistry.shared.addModule(StorageModule())
 
         // Pre-warm services so data is ready when Info tab opens
         WeatherService.shared.start()
@@ -158,6 +157,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupArrowKeyMonitor() {
         arrowMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self = self, self.panel?.isVisible == true else { return event }
+            // ⌘F → focus search field
+            if event.modifierFlags.contains(.command), event.keyCode == 3 {
+                NotificationCenter.default.post(name: .focusSearch, object: nil)
+                return nil
+            }
             let registry = ModuleRegistry.shared
             let count = registry.modules.count
             switch event.keyCode {
@@ -170,32 +174,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 registry.setActiveModule(at: next)
                 return nil
             case 36: // enter
-                if registry.activeModule.id == "clipboard" {
-                    NotificationCenter.default.post(name: .clipboardEnter, object: nil)
-                    return nil
-                }
-                if registry.activeModule.id == "keyvalue" {
-                    NotificationCenter.default.post(name: .snippetEnter, object: nil)
+                if registry.activeModule.id == "storage" {
+                    NotificationCenter.default.post(name: .storageEnter, object: nil)
                     return nil
                 }
                 return event
             case 125: // down
-                if registry.activeModule.id == "clipboard" {
-                    NotificationCenter.default.post(name: .clipboardMoveDown, object: nil)
-                    return nil
-                }
-                if registry.activeModule.id == "keyvalue" {
-                    NotificationCenter.default.post(name: .snippetMoveDown, object: nil)
+                if registry.activeModule.id == "storage" {
+                    NotificationCenter.default.post(name: .storageMoveDown, object: nil)
                     return nil
                 }
                 return event
             case 126: // up
-                if registry.activeModule.id == "clipboard" {
-                    NotificationCenter.default.post(name: .clipboardMoveUp, object: nil)
-                    return nil
-                }
-                if registry.activeModule.id == "keyvalue" {
-                    NotificationCenter.default.post(name: .snippetMoveUp, object: nil)
+                if registry.activeModule.id == "storage" {
+                    NotificationCenter.default.post(name: .storageMoveUp, object: nil)
                     return nil
                 }
                 return event

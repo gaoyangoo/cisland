@@ -42,6 +42,7 @@ struct KeyValueContentView: View {
     @ObservedObject private var store = SnippetStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @State private var copiedID: UUID?
+    @FocusState private var isSearchFocused: Bool
     @State private var selectedID: UUID?
     @State private var showingSheet = false
     @State private var sheetTitle = ""
@@ -88,11 +89,27 @@ struct KeyValueContentView: View {
                     .background(.ultraThinMaterial)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 8)
-            .padding(.bottom, 4)
+            .padding(.top, 4)
+            .padding(.bottom, 2)
 
-            if store.items.isEmpty {
+            // Search field
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(theme.colors.textMuted)
+                TextField("Search snippets...", text: $store.searchTerm)
+                    .textFieldStyle(.plain)
+                    .font(Mono.regular(10))
+                    .foregroundColor(theme.colors.text)
+                    .focused($isSearchFocused)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(theme.colors.searchFieldBackground)
+            .cornerRadius(6)
+            .padding(.top, 4)
+
+            if store.filteredItems.isEmpty {
                 VStack(spacing: 6) {
                     Image(systemName: "text.insert")
                         .font(.system(size: 22))
@@ -105,10 +122,10 @@ struct KeyValueContentView: View {
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 4) {
-                            ForEach($store.items) { $item in
+                        LazyVStack(spacing: 1) {
+                            ForEach(store.filteredItems) { item in
                                 EditableSnippetRow(
-                                    item: $item,
+                                    item: binding(for: item),
                                     copiedID: $copiedID,
                                     isSelected: selectedID == item.id,
                                     onDelete: { delete(item) },
@@ -125,8 +142,7 @@ struct KeyValueContentView: View {
                                 .id(item.id)
                             }
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 2)
                     }
                     .onReceive(NotificationCenter.default.publisher(for: .snippetMoveUp)) { _ in
                         moveSelection(.up, proxy: proxy)
@@ -142,26 +158,40 @@ struct KeyValueContentView: View {
         }
         .frame(height: 260)
         .onAppear { autoSelectFirst() }
-        .onChange(of: store.items.map(\.id)) { _ in autoSelectFirst() }
+        .onChange(of: store.filteredItems.map(\.id)) { _ in autoSelectFirst() }
+        .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in
+            isSearchFocused = true
+        }
     }
 
     private func autoSelectFirst() {
-        if let first = store.items.first, selectedID == nil || !store.items.contains(where: { $0.id == selectedID }) {
+        let list = store.filteredItems
+        if let first = list.first, selectedID == nil || !list.contains(where: { $0.id == selectedID }) {
             selectedID = first.id
         }
     }
 
+    private func binding(for item: KeyValueItem) -> Binding<KeyValueItem> {
+        Binding(
+            get: { self.store.items.first(where: { $0.id == item.id }) ?? item },
+            set: { newValue in
+                self.store.updateItem(id: item.id, key: newValue.key, value: newValue.value)
+            }
+        )
+    }
+
     private func moveSelection(_ direction: MoveCommandDirection, proxy: ScrollViewProxy) {
-        guard !store.items.isEmpty else { return }
-        let currentIdx = store.items.firstIndex(where: { $0.id == selectedID })
+        let list = store.filteredItems
+        guard !list.isEmpty else { return }
+        let currentIdx = list.firstIndex(where: { $0.id == selectedID })
         switch direction {
         case .up:
             let next = currentIdx.map { max($0 - 1, 0) } ?? 0
-            selectedID = store.items[next].id
+            selectedID = list[next].id
             proxy.scrollTo(selectedID, anchor: .center)
         case .down:
-            let next = currentIdx.map { min($0 + 1, store.items.count - 1) } ?? 0
-            selectedID = store.items[next].id
+            let next = currentIdx.map { min($0 + 1, list.count - 1) } ?? 0
+            selectedID = list[next].id
             proxy.scrollTo(selectedID, anchor: .center)
         default:
             break
@@ -170,7 +200,7 @@ struct KeyValueContentView: View {
 
     private func handleEnter() {
         guard let id = selectedID,
-              let item = store.items.first(where: { $0.id == id }) else { return }
+              let item = store.filteredItems.first(where: { $0.id == id }) else { return }
         copy(item)
     }
 
